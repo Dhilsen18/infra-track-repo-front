@@ -1,0 +1,21 @@
+<div class="auth-split">
+  <section class="auth-split-hero" aria-hidden="false">
+    <div class="hero-slideshow">
+      <div class="hero-slide hero-slide--1"></div>
+      <div class="hero-slide hero-slide--2"></div>
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">{{ heroEyebrowKey() | translate }}</p>
+      <h1 class="hero-title">{{ heroTitleKey() | translate }}</h1>
+      <p class="hero-desc">{{ heroDescKey() | translate }}</p>
+    </div>
+    <div class="hero-lang">
+      <app-language-switcher />
+    </div>
+  </section>
+
+  <section class="auth-split-panel">
+    <ng-content />
+  </section>
+</div>

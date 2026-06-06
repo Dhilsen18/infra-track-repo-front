@@ -1,0 +1,233 @@
+<section class="cfg-page">
+  <header class="cfg-page__header">
+    <div class="cfg-page__titles">
+      <h1 class="cfg-page__title">{{ 'configuration.title' | translate }}</h1>
+      <p class="cfg-page__intro">{{ 'configuration.intro' | translate }}</p>
+    </div>
+    <div class="cfg-page__actions">
+      @if (iam.isAdmin()) {
+        <button mat-stroked-button type="button" (click)="openAddIotNode()" [disabled]="store.apiLoading() || !store.httpPostEnabled()">
+          <mat-icon>sensors</mat-icon>
+          {{ 'configuration.actions.addIotNode' | translate }}
+        </button>
+      }
+      <button mat-stroked-button type="button" (click)="openAddMaintenance()" [disabled]="store.apiLoading() || !store.httpPostEnabled()">
+        <mat-icon>build</mat-icon>
+        {{ 'configuration.actions.addMaintenance' | translate }}
+      </button>
+      <button mat-flat-button class="cfg-btn cfg-btn--primary" type="button" (click)="refreshApi()" [disabled]="store.apiLoading()">
+        <mat-icon>refresh</mat-icon>
+        {{ 'configuration.actions.refreshApi' | translate }}
+      </button>
+    </div>
+  </header>
+
+  <div class="cfg-page__grid">
+    <mat-card class="cfg-card cfg-card--fleet">
+      <mat-card-header class="cfg-card__head">
+        <span class="cfg-card__icon" aria-hidden="true">
+          <mat-icon>insights</mat-icon>
+        </span>
+        <div class="cfg-card__head-text">
+          <mat-card-title class="cfg-card__title">{{ 'configuration.sections.apiSummary' | translate }}</mat-card-title>
+          <mat-card-subtitle class="cfg-card__sub">{{ 'configuration.fleetCardSubtitle' | translate }}</mat-card-subtitle>
+        </div>
+      </mat-card-header>
+      <mat-card-content class="cfg-card__body">
+        @if (store.apiLoading()) {
+          <div class="cfg-loading">
+            <mat-progress-spinner diameter="36" mode="indeterminate" />
+          </div>
+        } @else if (store.apiEmpty()) {
+          <p class="cfg-muted">{{ 'configuration.api.empty' | translate }}</p>
+        } @else if (store.dashboard(); as dash) {
+          <dl class="cfg-kpi-grid">
+            <div class="cfg-kpi">
+              <dt>{{ 'configuration.api.machineryTotal' | translate }}</dt>
+              <dd>{{ dash.fleet.machineryTotal }}</dd>
+            </div>
+            <div class="cfg-kpi">
+              <dt>{{ 'configuration.api.machineryActive' | translate }}</dt>
+              <dd>{{ dash.fleet.machineryActive }}</dd>
+            </div>
+            <div class="cfg-kpi">
+              <dt>{{ 'configuration.api.machineryMaint' | translate }}</dt>
+              <dd>{{ dash.fleet.machineryMaintenance }}</dd>
+            </div>
+            <div class="cfg-kpi">
+              <dt>{{ 'configuration.api.iotTotal' | translate }}</dt>
+              <dd>{{ dash.fleet.iotNodesTotal }}</dd>
+            </div>
+            <div class="cfg-kpi">
+              <dt>{{ 'configuration.api.iotOnline' | translate }}</dt>
+              <dd>{{ dash.fleet.iotOnline }}</dd>
+            </div>
+            <div class="cfg-kpi">
+              <dt>{{ 'configuration.api.maintTotal' | translate }}</dt>
+              <dd>{{ dash.fleet.maintenanceRecordsTotal }}</dd>
+            </div>
+            <div class="cfg-kpi">
+              <dt>{{ 'configuration.api.maintDueSoon' | translate }}</dt>
+              <dd>{{ dash.fleet.maintenanceDueSoon }}</dd>
+            </div>
+          </dl>
+        }
+      </mat-card-content>
+    </mat-card>
+
+    @if (iam.isAdmin()) {
+      <mat-card class="cfg-card cfg-card--iot">
+        <mat-card-header class="cfg-card__head">
+          <span class="cfg-card__icon" aria-hidden="true">
+            <mat-icon>sensors</mat-icon>
+          </span>
+          <div class="cfg-card__head-text">
+            <mat-card-title class="cfg-card__title">{{ 'configuration.iot.sectionTitle' | translate }}</mat-card-title>
+            <mat-card-subtitle class="cfg-card__sub">{{ 'configuration.iot.cardSubtitle' | translate }}</mat-card-subtitle>
+          </div>
+        </mat-card-header>
+        <mat-card-content class="cfg-card__body">
+          @if (!store.httpPutDeleteEnabled()) {
+            <div class="cfg-banner cfg-banner--warn" role="status">
+              <mat-icon class="cfg-banner__icon" aria-hidden="true">lock_clock</mat-icon>
+              <span class="cfg-banner__text">{{ 'configuration.iot.readOnlyHint' | translate }}</span>
+            </div>
+          }
+          @if (store.apiLoading()) {
+            <div class="cfg-loading">
+              <mat-progress-spinner diameter="36" mode="indeterminate" />
+            </div>
+          } @else if (store.iotNodes().length === 0) {
+            <p class="cfg-muted cfg-muted--block">{{ 'configuration.iot.emptyNodes' | translate }}</p>
+          } @else {
+            <div class="cfg-table-panel">
+              <div class="cfg-table-scroll">
+              <table mat-table [dataSource]="store.iotNodes()" class="cfg-table cfg-table--iot">
+                <ng-container matColumnDef="nodeIdentifier">
+                  <th mat-header-cell *matHeaderCellDef>{{ 'configuration.iot.colNodeId' | translate }}</th>
+                  <td mat-cell *matCellDef="let node">
+                    <span class="cfg-mono">{{ node.nodeIdentifier }}</span>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="connectionStatus">
+                  <th mat-header-cell *matHeaderCellDef>{{ 'configuration.iot.colStatus' | translate }}</th>
+                  <td mat-cell *matCellDef="let node">
+                    <span
+                      class="cfg-status"
+                      [class.cfg-status--on]="statusTone(node.connectionStatus) === 'on'"
+                      [class.cfg-status--off]="statusTone(node.connectionStatus) === 'off'"
+                      [class.cfg-status--other]="statusTone(node.connectionStatus) === 'other'"
+                    >
+                      {{ connectionStatusLabel(node.connectionStatus) }}
+                    </span>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="batteryVoltage">
+                  <th mat-header-cell *matHeaderCellDef>{{ 'configuration.iot.colBattery' | translate }}</th>
+                  <td mat-cell *matCellDef="let node">{{ node.batteryVoltage | number: '1.0-2' }} V</td>
+                </ng-container>
+                <ng-container matColumnDef="lastSeen">
+                  <th mat-header-cell *matHeaderCellDef>{{ 'configuration.iot.colLastSeen' | translate }}</th>
+                  <td mat-cell *matCellDef="let node">{{ node.lastSeen | date: 'medium' }}</td>
+                </ng-container>
+                <ng-container matColumnDef="firmwareVersion">
+                  <th mat-header-cell *matHeaderCellDef>{{ 'configuration.iot.colFirmware' | translate }}</th>
+                  <td mat-cell *matCellDef="let node">
+                    <span class="cfg-mono cfg-mono--soft">{{ node.firmwareVersion }}</span>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="linkedMachine">
+                  <th mat-header-cell *matHeaderCellDef>{{ 'configuration.iot.colMachine' | translate }}</th>
+                  <td mat-cell *matCellDef="let node">{{ machineryLabel(node.machineryId) }}</td>
+                </ng-container>
+                <ng-container matColumnDef="linkAction">
+                  <th mat-header-cell *matHeaderCellDef>{{ 'configuration.iot.colLink' | translate }}</th>
+                  <td mat-cell *matCellDef="let node">
+                    <div class="cfg-link-row">
+                      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="cfg-link-field">
+                        <mat-label>{{ 'configuration.iot.chooseMachine' | translate }}</mat-label>
+                        <mat-select
+                          [value]="effectiveMachineryId(node)"
+                          [disabled]="store.apiLoading() || !store.httpPutDeleteEnabled()"
+                          (selectionChange)="onMachineryDraftChange(node.id, $event.value)"
+                        >
+                          @for (m of store.machinery(); track m.id) {
+                            <mat-option [value]="m.id">{{ m.plateNumber }} · {{ m.brand }} {{ m.model }}</mat-option>
+                          }
+                        </mat-select>
+                      </mat-form-field>
+                      <button
+                        mat-stroked-button
+                        type="button"
+                        color="primary"
+                        class="cfg-link-btn"
+                        [disabled]="
+                          store.apiLoading() ||
+                          !store.httpPutDeleteEnabled() ||
+                          !isLinkDirty(node) ||
+                          savingNodeId() === node.id
+                        "
+                        (click)="saveNodeLink(node)"
+                      >
+                        @if (savingNodeId() === node.id) {
+                          <mat-progress-spinner class="cfg-link-spinner" diameter="20" mode="indeterminate" />
+                        } @else {
+                          {{ 'configuration.iot.saveLink' | translate }}
+                        }
+                      </button>
+                    </div>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="iotColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: iotColumns" class="cfg-table-row"></tr>
+              </table>
+              </div>
+            </div>
+            <p class="cfg-footnote">{{ 'configuration.iot.tableFoot' | translate }}</p>
+          }
+        </mat-card-content>
+      </mat-card>
+    } @else {
+      <mat-card class="cfg-card cfg-card--notice">
+        <mat-card-content class="cfg-card__body cfg-card__body--notice">
+          <mat-icon class="cfg-notice-icon" aria-hidden="true">lock</mat-icon>
+          <p class="cfg-notice-text">{{ 'configuration.iot.nonAdmin' | translate }}</p>
+        </mat-card-content>
+      </mat-card>
+    }
+
+    @if (store.dashboard(); as dash2) {
+      @if (dash2.subscriptions.length > 0) {
+        <mat-card class="cfg-card cfg-card--subs">
+          <mat-card-header class="cfg-card__head">
+            <span class="cfg-card__icon" aria-hidden="true">
+              <mat-icon>subscriptions</mat-icon>
+            </span>
+            <div class="cfg-card__head-text">
+              <mat-card-title class="cfg-card__title">{{ 'configuration.sections.subscriptionsSection' | translate }}</mat-card-title>
+              <mat-card-subtitle class="cfg-card__sub">{{ 'configuration.subsCardSubtitle' | translate }}</mat-card-subtitle>
+            </div>
+          </mat-card-header>
+          <mat-card-content class="cfg-card__body">
+            <div class="cfg-table-panel">
+              <div class="cfg-table-scroll">
+              <table mat-table [dataSource]="dash2.subscriptions" class="cfg-table cfg-table--subs">
+                <ng-container matColumnDef="id">
+                  <th mat-header-cell *matHeaderCellDef>{{ 'configuration.subscriptionTable.colId' | translate }}</th>
+                  <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+                </ng-container>
+                <ng-container matColumnDef="summary">
+                  <th mat-header-cell *matHeaderCellDef>{{ 'configuration.subscriptionTable.colDetail' | translate }}</th>
+                  <td mat-cell *matCellDef="let row">{{ row.summary }}</td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="subColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: subColumns" class="cfg-table-row"></tr>
+              </table>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      }
+    }
+  </div>
+</section>

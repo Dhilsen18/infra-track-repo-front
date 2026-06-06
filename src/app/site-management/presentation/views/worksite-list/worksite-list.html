@@ -1,0 +1,175 @@
+<section class="page">
+
+  <app-page-header-card
+    titleKey="siteManagement.list.title"
+    introKey="siteManagement.list.intro"
+  >
+    @if (limits.canAddWorksite(store.worksites().length)) {
+      <a routerLink="/obras/nueva" class="btn-primary">
+        <span class="material-icons-outlined">add</span>
+        {{ 'nav.newWorksite' | translate }}
+      </a>
+    } @else {
+      <button type="button" class="btn-primary" disabled>
+        <span class="material-icons-outlined">add</span>
+        {{ 'nav.newWorksite' | translate }}
+      </button>
+    }
+  </app-page-header-card>
+
+
+
+  @if (!limits.canAddWorksite(store.worksites().length)) {
+    <div class="it-banner it-banner--warn" role="status">
+      <span class="material-icons-outlined">info</span>
+      {{
+        'planLimits.bannerWorksite'
+          | translate: {
+              current: store.worksites().length,
+              max: limits.displayMax(limits.limits().maxWorksites)
+            }
+      }}
+      {{ 'planLimits.upgradeHint' | translate }}
+    </div>
+  }
+
+  <div class="summary-row" aria-label="Resumen">
+
+    <article class="summary-card">
+
+      <span class="summary-card__icon material-icons-outlined">domain</span>
+
+      <div>
+
+        <span class="summary-card__value">{{ store.worksites().length }}</span>
+
+        <span class="summary-card__label">{{ 'siteManagement.list.summaryTotal' | translate }}</span>
+
+      </div>
+
+    </article>
+
+    <article class="summary-card summary-card--active">
+
+      <span class="summary-card__icon material-icons-outlined">check_circle</span>
+
+      <div>
+
+        <span class="summary-card__value">{{ activeCount() }}</span>
+
+        <span class="summary-card__label">{{ 'siteManagement.list.summaryActive' | translate }}</span>
+
+      </div>
+
+    </article>
+
+    <article class="summary-card">
+
+      <span class="summary-card__icon material-icons-outlined">local_shipping</span>
+
+      <div>
+
+        <span class="summary-card__value">{{ transportCount() }}</span>
+
+        <span class="summary-card__label">{{ 'siteManagement.list.summaryTransports' | translate }}</span>
+
+      </div>
+
+    </article>
+
+  </div>
+
+  @if (store.snack(); as key) {
+
+    <div class="it-banner" [class.it-banner--success]="!key.startsWith('planLimits.')" [class.it-banner--warn]="key.startsWith('planLimits.')" role="status">
+
+      <span class="material-icons-outlined">check_circle</span>
+
+      {{ key | translate }}
+
+    </div>
+
+  }
+
+
+
+  <article class="it-card table-card">
+
+    <div class="table-wrap">
+
+      <table class="site-table">
+
+        <thead>
+
+          <tr>
+
+            <th>{{ 'siteManagement.list.colName' | translate }}</th>
+
+            <th>{{ 'siteManagement.list.colCity' | translate }}</th>
+
+            <th>{{ 'siteManagement.list.colType' | translate }}</th>
+
+            <th>{{ 'siteManagement.list.colStatus' | translate }}</th>
+
+            <th class="site-table__actions">{{ 'siteManagement.list.colActions' | translate }}</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          @for (row of store.worksites(); track row.id) {
+
+            <tr>
+
+              <td class="site-table__name">{{ row.name }}</td>
+
+              <td>{{ row.city }}</td>
+
+              <td><span class="type-pill">{{ typeKey(row.type) | translate }}</span></td>
+
+              <td>
+
+                <span
+
+                  class="status-pill"
+
+                  [class.status-pill--active]="row.status === 'active'"
+
+                  [class.status-pill--finished]="row.status === 'finished'"
+
+                >
+
+                  {{ statusKey(row.status) | translate }}
+
+                </span>
+
+              </td>
+
+              <td class="site-table__actions">
+
+                <a [routerLink]="['/obras', row.id]" class="btn-row-action">
+
+                  <span class="material-icons-outlined">open_in_new</span>
+
+                  {{ 'siteManagement.list.viewDetail' | translate }}
+
+                </a>
+
+              </td>
+
+            </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </article>
+
+</section>
+

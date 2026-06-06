@@ -1,0 +1,16 @@
+<header class="page-header-card">
+  <div class="page-header-card__main">
+    @if (eyebrowKey(); as key) {
+      <p class="page-header-card__eyebrow">{{ key | translate }}</p>
+    } @else if (eyebrowText(); as text) {
+      <p class="page-header-card__eyebrow">{{ text }}</p>
+    }
+    <h1 class="page-header-card__title">{{ titleKey() | translate }}</h1>
+    @if (introKey(); as intro) {
+      <p class="page-header-card__intro">{{ intro | translate }}</p>
+    }
+  </div>
+  <div class="page-header-card__actions">
+    <ng-content />
+  </div>
+</header>

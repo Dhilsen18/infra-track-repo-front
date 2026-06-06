@@ -1,0 +1,139 @@
+<section class="gps-page">
+  <header class="gps-head">
+    <div>
+      <h1 class="it-page-title">{{ 'telemetry.map.pageTitle' | translate }}</h1>
+      <p class="gps-intro">{{ 'telemetry.map.intro' | translate }}</p>
+    </div>
+    <button type="button" class="btn-refresh" (click)="gps.refresh()" [disabled]="gps.loading()">
+      <span class="material-icons-outlined" [class.spin]="gps.loading()">refresh</span>
+      {{ 'telemetry.map.refresh' | translate }}
+    </button>
+  </header>
+
+  @if (gps.loadError(); as loadErr) {
+    <div
+      class="gps-banner"
+      [class.gps-banner--warn]="loadErr === 'telemetry.map.loadPartial'"
+      role="alert"
+    >
+      <span class="material-icons-outlined">cloud_off</span>
+      {{ loadErr | translate }}
+    </div>
+  }
+
+  <div class="gps-layout">
+    <div class="map-column">
+      <div #mapHost class="map-host"></div>
+      <div class="map-legend-bar">
+        <span class="leg-item"
+          ><i class="leg-dot leg-dot--active"></i> {{ 'telemetry.map.legendActive' | translate }}</span
+        >
+        <span class="leg-item"
+          ><i class="leg-dot leg-dot--maint"></i> {{ 'telemetry.map.legendMaintenance' | translate }}</span
+        >
+        <span class="leg-item"
+          ><i class="leg-dot leg-dot--inactive"></i> {{ 'telemetry.map.legendInactive' | translate }}</span
+        >
+      </div>
+    </div>
+
+    <aside class="side-panel" [class.side-panel--open]="gps.selectedId() !== null">
+      @if (gps.detail(); as d) {
+        <div class="side-inner">
+          <div class="side-head">
+            <h2 class="side-title">{{ d.machinery.brand }} {{ d.machinery.model }}</h2>
+            <button type="button" class="btn-close" (click)="closePanel()" [attr.aria-label]="('telemetry.map.close' | translate)">
+              <span class="material-icons-outlined">close</span>
+            </button>
+          </div>
+          <p class="side-plate">{{ d.machinery.plateNumber }}</p>
+          <p class="side-status">
+            <span [attr.class]="pillClass(d.machinery.currentStatus)">{{ machineStateKey(d.machinery.currentStatus) | translate }}</span>
+          </p>
+
+          <dl class="detail-grid">
+            <dt>{{ 'telemetry.map.fuel' | translate }}</dt>
+            <dd>
+              @if (d.fuelLevelPct != null) {
+                {{ d.fuelLevelPct | number : '1.0-1' }} %
+              } @else if (d.fuelLevelRaw != null) {
+                {{ d.fuelLevelRaw | number : '1.0-1' }} <span class="muted">L</span>
+              } @else {
+                —
+              }
+            </dd>
+            <dt>{{ 'telemetry.map.engineHours' | translate }}</dt>
+            <dd>{{ d.engineHours != null ? (d.engineHours | number : '1.0-1') : '—' }}</dd>
+            <dt>{{ 'telemetry.map.speed' | translate }}</dt>
+            <dd>{{ d.speedKmh != null ? (d.speedKmh | number : '1.0-1') + ' km/h' : '—' }}</dd>
+            <dt>{{ 'telemetry.map.telemetryTime' | translate }}</dt>
+            <dd>{{ d.recordedAt ?? '—' }}</dd>
+          </dl>
+
+          <h3 class="side-sub">{{ 'telemetry.map.iotTitle' | translate }}</h3>
+          @if (d.nodes.length === 0) {
+            <p class="muted">{{ 'telemetry.map.noNodes' | translate }}</p>
+          } @else {
+            <ul class="node-list">
+              @for (n of d.nodes; track n.id) {
+                <li class="node-row">
+                  <span class="node-id">{{ n.nodeIdentifier }}</span>
+                  <span class="node-conn" [class.node-conn--online]="n.connectionStatus === 'online'" [class.node-conn--offline]="n.connectionStatus === 'offline'">{{
+                    nodeConnKey(n.connectionStatus) | translate
+                  }}</span>
+                  <span class="node-seen">{{ n.lastSeen }}</span>
+                </li>
+              }
+            </ul>
+          }
+
+          @if (iam.isAdmin()) {
+            <div class="admin-box">
+              @if (gps.assignLocalNotice(); as localNote) {
+                <p class="field-warn">{{ localNote | translate }}</p>
+              }
+              @if (gps.operatorWorkload().length > 0) {
+                <div class="workload-block">
+                  <h4 class="workload-title">{{ 'telemetry.map.operatorDistribution' | translate }}</h4>
+                  <ul class="workload-list">
+                    @for (w of gps.operatorWorkload(); track w.operatorId) {
+                      <li>{{ 'telemetry.map.operatorRow' | translate : { name: w.label, count: w.count } }}</li>
+                    }
+                  </ul>
+                </div>
+              }
+              <div class="admin-head">
+                <span class="admin-badge">admin</span>
+                <span class="admin-hint">{{ 'telemetry.map.adminOnly' | translate }}</span>
+              </div>
+              <label class="field-label" for="op-select">{{ 'telemetry.map.assignOperator' | translate }}</label>
+              @if (gps.operators().length === 0) {
+                <p class="muted">{{ 'telemetry.map.noOperators' | translate }}</p>
+              } @else {
+                <select
+                  id="op-select"
+                  class="op-select"
+                  [value]="d.machinery.operatorId"
+                  [disabled]="gps.assignPending() || !gps.httpPutDeleteEnabled()"
+                  (change)="onOperatorChange($event, d.machinery.id, d.machinery.operatorId)"
+                >
+                  @for (op of gps.operators(); track op.id) {
+                    <option [value]="op.id">{{ op.fullName }} (#{{ op.id }})</option>
+                  }
+                </select>
+              }
+              @if (gps.assignError(); as aErr) {
+                <p class="field-err">{{ aErr | translate }}</p>
+              }
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="side-empty">
+          <span class="material-icons-outlined side-empty-icon">touch_app</span>
+          <p>{{ 'telemetry.map.pickMachine' | translate }}</p>
+        </div>
+      }
+    </aside>
+  </div>
+</section>

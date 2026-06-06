@@ -1,0 +1,68 @@
+<section class="page">
+  @if (device(); as d) {
+    <nav class="page-nav">
+      <a routerLink="/dispositivos" class="page-back">
+        <span class="material-icons-outlined">arrow_back</span>
+        <span>{{ 'fleetOperations.iot.detail.back' | translate }}</span>
+      </a>
+    </nav>
+
+    <article class="form-panel it-card">
+      <header class="form-panel__head">
+        <h1 class="form-panel__title">{{ d.installLocation }}</h1>
+        <p class="form-panel__intro">{{ 'fleetOperations.iot.detail.intro' | translate }}</p>
+      </header>
+
+      <div class="detail-fields">
+        <div class="detail-field">
+          <span class="detail-field__label">{{ 'fleetOperations.iot.detail.id' | translate }}</span>
+          <span class="detail-field__value">{{ d.id }}</span>
+        </div>
+        <div class="detail-field">
+          <span class="detail-field__label">{{ 'fleetOperations.iot.wizard.nodeType' | translate }}</span>
+          <span class="detail-field__value">{{ nodeTypeKey(d.nodeType) | translate }}</span>
+        </div>
+        <div class="detail-field detail-field--full">
+          <span class="detail-field__label">{{ 'fleetOperations.iot.wizard.location' | translate }}</span>
+          <span class="detail-field__value">{{ d.installLocation }}</span>
+        </div>
+        <div class="detail-field">
+          <span class="detail-field__label">{{ 'fleetOperations.iot.list.colSerial' | translate }}</span>
+          <span class="detail-field__value">{{ d.serialNumber }}</span>
+        </div>
+        <div class="detail-field">
+          <span class="detail-field__label">{{ 'fleetOperations.iot.list.colStatus' | translate }}</span>
+          <span class="detail-field__value">{{ statusKey(d.connectionStatus) | translate }}</span>
+        </div>
+        <div class="detail-field">
+          <span class="detail-field__label">{{ 'fleetOperations.iot.list.colLinked' | translate }}</span>
+          <span class="detail-field__value">{{ d.linkedTransportPlate ?? '—' }}</span>
+        </div>
+        <div class="detail-field">
+          <span class="detail-field__label">{{ 'fleetOperations.iot.wizard.firmware' | translate }}</span>
+          <span class="detail-field__value">{{ d.firmwareVersion }}</span>
+        </div>
+      </div>
+
+      <h2 class="detail-sensors-title">{{ 'fleetOperations.iot.detail.sensorsTitle' | translate }}</h2>
+      <p class="detail-sensors-hint">{{ 'fleetOperations.iot.detail.sensorsHint' | translate }}</p>
+      <div class="detail-sensors">
+        @for (reading of sensorReadings(); track reading.key) {
+          <div class="detail-sensor">
+            <div class="detail-sensor__body">
+              <span class="detail-sensor__label">{{ ('fleetOperations.iot.params.' + reading.key) | translate }}</span>
+              <span class="detail-sensor__value">{{ reading.value }}</span>
+            </div>
+            <span class="material-icons-outlined detail-sensor__ok">check_circle</span>
+          </div>
+        }
+      </div>
+    </article>
+  } @else {
+    <div class="it-banner it-banner--warn">{{ 'fleetOperations.iot.detail.notFound' | translate }}</div>
+    <a routerLink="/dispositivos" class="page-back">
+      <span class="material-icons-outlined">arrow_back</span>
+      <span>{{ 'fleetOperations.iot.detail.back' | translate }}</span>
+    </a>
+  }
+</section>

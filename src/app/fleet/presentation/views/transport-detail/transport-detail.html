@@ -1,0 +1,67 @@
+<section class="page">
+  @if (transport(); as t) {
+    <nav class="page-nav">
+      <a routerLink="/transportes" class="page-back">
+        <span class="material-icons-outlined">arrow_back</span>
+        <span>{{ 'fleetOperations.transport.detail.back' | translate }}</span>
+      </a>
+    </nav>
+
+    <article class="form-panel it-card">
+      <header class="form-panel__head">
+        <h1 class="form-panel__title">{{ t.plate }}</h1>
+        <p class="form-panel__intro">{{ 'fleetOperations.transport.detail.intro' | translate }}</p>
+      </header>
+
+      <div class="detail-fields">
+        <div class="detail-field">
+          <span class="detail-field__label">{{ 'fleetOperations.transport.detail.id' | translate }}</span>
+          <span class="detail-field__value">{{ t.id }}</span>
+        </div>
+        <div class="detail-field">
+          <span class="detail-field__label">{{ 'fleetOperations.transport.wizard.unitType' | translate }}</span>
+          <span class="detail-field__value">{{ unitTypeKey(t.unitType) | translate }}</span>
+        </div>
+        <div class="detail-field detail-field--full">
+          <span class="detail-field__label">{{ 'fleetOperations.transport.detail.plateModel' | translate }}</span>
+          <span class="detail-field__value">{{ t.brand }} {{ t.model }}</span>
+        </div>
+        <div class="detail-field">
+          <span class="detail-field__label">{{ 'fleetOperations.transport.wizard.fuelType' | translate }}</span>
+          <span class="detail-field__value">{{ fuelKey(t.fuelType) | translate }}</span>
+        </div>
+        <div class="detail-field">
+          <span class="detail-field__label">{{ 'fleetOperations.transport.list.colIot' | translate }}</span>
+          <span class="detail-field__value">{{ t.iotNodeSerial ?? '—' }}</span>
+        </div>
+        <div class="detail-field">
+          <span class="detail-field__label">{{ 'fleetOperations.transport.list.colStatus' | translate }}</span>
+          <span class="detail-field__value">{{ statusKey(t.status) | translate }}</span>
+        </div>
+        <div class="detail-field">
+          <span class="detail-field__label">{{ 'fleetOperations.transport.list.colTank' | translate }}</span>
+          <span class="detail-field__value">{{ t.tankCapacityLiters }} L</span>
+        </div>
+      </div>
+
+      <h2 class="detail-sensors-title">{{ 'fleetOperations.transport.detail.sensorsTitle' | translate }}</h2>
+      <div class="detail-sensors">
+        @for (reading of sensorReadings(); track reading.key) {
+          <div class="detail-sensor">
+            <div class="detail-sensor__body">
+              <span class="detail-sensor__label">{{ ('fleetOperations.transport.params.' + reading.key) | translate }}</span>
+              <span class="detail-sensor__value">{{ reading.value }}</span>
+            </div>
+            <span class="material-icons-outlined detail-sensor__ok">check_circle</span>
+          </div>
+        }
+      </div>
+    </article>
+  } @else {
+    <div class="it-banner it-banner--warn">{{ 'fleetOperations.transport.detail.notFound' | translate }}</div>
+    <a routerLink="/transportes" class="page-back">
+      <span class="material-icons-outlined">arrow_back</span>
+      <span>{{ 'fleetOperations.transport.detail.back' | translate }}</span>
+    </a>
+  }
+</section>

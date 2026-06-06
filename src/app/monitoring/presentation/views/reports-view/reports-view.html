@@ -1,0 +1,201 @@
+<section #pageWrap class="reports-page">
+  <app-page-header-card titleKey="reports.title" introKey="reports.intro" />
+
+  <mat-card class="filters-card filters-card--charts" appearance="outlined">
+    <mat-card-content class="filters-inner">
+      <div class="filters-toolbar-head">
+        <mat-icon class="filters-toolbar-head__icon" aria-hidden="true">insert_chart_outlined</mat-icon>
+        <span class="filters-toolbar-head__title">{{ 'reports.filters.toolbarCharts' | translate }}</span>
+      </div>
+      <div class="reports-filters">
+        <mat-form-field appearance="outline" class="reports-filters__field" subscriptSizing="dynamic" floatLabel="always">
+          <mat-label>{{ 'reports.filters.dateRange' | translate }}</mat-label>
+          <mat-select
+            panelClass="reports-select-panel"
+            [value]="store.dateRange()"
+            (selectionChange)="store.setDateRange($event.value)"
+          >
+            @for (opt of dateOptions; track opt.value) {
+              <mat-option [value]="opt.value">{{ opt.labelKey | translate }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="reports-filters__field" subscriptSizing="dynamic" floatLabel="always">
+          <mat-label>{{ 'reports.filters.project' | translate }}</mat-label>
+          <mat-select
+            panelClass="reports-select-panel"
+            [value]="store.project()"
+            (selectionChange)="store.setProject($event.value)"
+          >
+            @for (opt of projectOptions; track opt.value) {
+              <mat-option [value]="opt.value">{{ opt.labelKey | translate }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="reports-filters__field" subscriptSizing="dynamic" floatLabel="always">
+          <mat-label>{{ 'reports.filters.machine' | translate }}</mat-label>
+          <mat-select
+            panelClass="reports-select-panel"
+            [value]="store.machine()"
+            (selectionChange)="store.setMachine($event.value)"
+          >
+            @for (opt of machineOptions; track opt.value) {
+              <mat-option [value]="opt.value">{{ opt.labelKey | translate }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="reports-chart-grid">
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-card-title>{{ 'reports.charts.fleetTitle' | translate }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="chart-surface">
+          <canvas #chartFleet></canvas>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-card-title>{{ 'reports.charts.statusTitle' | translate }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="chart-surface chart-surface--donut">
+          <canvas #chartStatus></canvas>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    @if (planLimits.limits().advancedReports) {
+      <mat-card class="chart-card">
+        <mat-card-header>
+          <mat-card-title>{{ 'reports.charts.weeklyTitle' | translate }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="chart-surface">
+            <canvas #chartWeekly></canvas>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="chart-card">
+        <mat-card-header>
+          <mat-card-title>{{ 'reports.charts.trendTitle' | translate }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="chart-surface">
+            <canvas #chartTrend></canvas>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    }
+  </div>
+
+  @if (!planLimits.limits().advancedReports) {
+    <p class="reports-plan-hint">{{ 'planLimits.advancedReportsLocked' | translate }}</p>
+  }
+
+  <article class="it-card alerts-panel">
+    <header class="alerts-panel__head">
+      <div>
+        <h2 class="alerts-panel__title">
+          <span class="material-icons-outlined">notifications_active</span>
+          {{ 'reports.alertsCenter.title' | translate }}
+        </h2>
+        <p class="alerts-panel__intro">{{ 'reports.alertsCenter.intro' | translate }}</p>
+      </div>
+    </header>
+
+    @if (alertsStore.isOwner()) {
+      <p class="alerts-panel__hint">{{ 'reports.alertsCenter.ownerHint' | translate }}</p>
+    }
+
+    <div class="alerts-filters">
+      @if (!alertsStore.isOwner()) {
+        <mat-form-field appearance="outline" class="alerts-filters__field" subscriptSizing="dynamic">
+          <mat-label>{{ 'reports.alertsCenter.filterSeverity' | translate }}</mat-label>
+          <mat-select
+            [value]="alertsStore.severityFilterValue()"
+            (selectionChange)="alertsStore.setSeverityFilter($event.value)"
+          >
+            <mat-option value="all">{{ 'reports.alertsCenter.optAll' | translate }}</mat-option>
+            <mat-option value="critical">{{ 'reports.alertsCenter.sev.critical' | translate }}</mat-option>
+            <mat-option value="warning">{{ 'reports.alertsCenter.sev.warning' | translate }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      }
+      <mat-form-field appearance="outline" class="alerts-filters__field" subscriptSizing="dynamic">
+        <mat-label>{{ 'reports.alertsCenter.filterType' | translate }}</mat-label>
+        <mat-select
+          [value]="alertsStore.typeFilterValue()"
+          (selectionChange)="alertsStore.setTypeFilter($event.value)"
+        >
+          <mat-option value="all">{{ 'reports.alertsCenter.optAll' | translate }}</mat-option>
+          <mat-option value="fuel_theft">{{ 'reports.alertsCenter.type.fuel_theft' | translate }}</mat-option>
+          <mat-option value="idle_excess">{{ 'reports.alertsCenter.type.idle_excess' | translate }}</mat-option>
+          <mat-option value="maintenance">{{ 'reports.alertsCenter.type.maintenance' | translate }}</mat-option>
+          <mat-option value="geofence">{{ 'reports.alertsCenter.type.geofence' | translate }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="alerts-filters__field" subscriptSizing="dynamic">
+        <mat-label>{{ 'reports.alertsCenter.filterAck' | translate }}</mat-label>
+        <mat-select
+          [value]="alertsStore.ackFilterValue()"
+          (selectionChange)="alertsStore.setAckFilter($event.value)"
+        >
+          <mat-option value="all">{{ 'reports.alertsCenter.optAll' | translate }}</mat-option>
+          <mat-option value="ack">{{ 'reports.alertsCenter.optAcknowledged' | translate }}</mat-option>
+          <mat-option value="pending">{{ 'reports.alertsCenter.optPending' | translate }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    @if (alertsStore.filteredRows().length === 0) {
+      <div class="alerts-empty">
+        <span class="material-icons-outlined">notifications_off</span>
+        <p>{{ 'reports.alertsCenter.empty' | translate }}</p>
+      </div>
+    } @else {
+      <div class="alerts-table-wrap">
+        <table class="alerts-table-html">
+          <thead>
+            <tr>
+              <th>{{ 'reports.alertsCenter.colId' | translate }}</th>
+              <th>{{ 'reports.alertsCenter.colTime' | translate }}</th>
+              <th>{{ 'reports.alertsCenter.colMachine' | translate }}</th>
+              <th>{{ 'reports.alertsCenter.colType' | translate }}</th>
+              <th>{{ 'reports.alertsCenter.colSeverity' | translate }}</th>
+              <th>{{ 'reports.alertsCenter.colDesc' | translate }}</th>
+              <th class="col-ack">{{ 'reports.alertsCenter.colAck' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of alertsStore.filteredRows(); track row.id) {
+              <tr>
+                <td>{{ row.id }}</td>
+                <td>{{ row.timestamp | date: 'short' }}</td>
+                <td>{{ row.machineryId }}</td>
+                <td>{{ ('reports.alertsCenter.type.' + typeKey(row.type)) | translate }}</td>
+                <td>
+                  <span [class]="severityClass(row.severity)">
+                    {{ ('reports.alertsCenter.sev.' + sevKey(row.severity)) | translate }}
+                  </span>
+                </td>
+                <td class="cell-desc">{{ row.description }}</td>
+                <td class="col-ack">
+                  <mat-slide-toggle
+                    [checked]="row.isAcknowledged"
+                    [disabled]="!alertsStore.canAcknowledge()"
+                    (change)="onAckChange(row, $event.checked)"
+                  />
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </article>
+</section>

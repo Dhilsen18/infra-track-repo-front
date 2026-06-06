@@ -1,0 +1,115 @@
+<section class="page">
+  @if (worksite(); as site) {
+    <nav class="page-nav">
+      <a [routerLink]="['/obras', site.id]" class="page-back">
+        <span class="material-icons-outlined">arrow_back</span>
+        <span>{{ 'siteManagement.resources.backToWorksite' | translate }}</span>
+      </a>
+    </nav>
+
+    <app-page-header-card
+      [eyebrowText]="site.name + ' · ' + site.city"
+      titleKey="siteManagement.resources.title"
+      introKey="siteManagement.resources.intro"
+    >
+      <span class="status-pill status-pill--active">{{ staffList().length }} {{ 'siteManagement.resources.staffBadge' | translate }}</span>
+      <span class="status-pill status-pill--active">{{ transportList().length }} {{ 'siteManagement.resources.transportBadge' | translate }}</span>
+    </app-page-header-card>
+
+    <div class="resources-split">
+      <article class="it-card panel">
+        <header class="panel-head">
+          <span class="panel-head__icon material-icons-outlined">engineering</span>
+          <div>
+            <h2>{{ 'siteManagement.resources.staffTitle' | translate }}</h2>
+            <p>{{ 'siteManagement.resources.staffHint' | translate }}</p>
+          </div>
+        </header>
+        @if (staffList().length === 0) {
+          <p class="panel-empty">{{ 'siteManagement.resources.staffEmpty' | translate }}</p>
+        } @else {
+          <div class="table-wrap">
+            <table class="site-table">
+              <thead>
+                <tr>
+                  <th>{{ 'siteManagement.resources.colStaff' | translate }}</th>
+                  <th>{{ 'siteManagement.resources.colLicense' | translate }}</th>
+                  <th>{{ 'siteManagement.resources.colVehicle' | translate }}</th>
+                  <th class="site-table__actions">{{ 'siteManagement.list.colActions' | translate }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (member of staffList(); track member.id) {
+                  <tr>
+                    <td class="site-table__name">{{ member.fullName }}</td>
+                    <td>{{ member.licenseNumber }}</td>
+                    <td>{{ member.currentVehicle ?? '—' }}</td>
+                    <td class="site-table__actions">
+                      <a [routerLink]="['/obras/personal', member.id]" class="btn-row-action">
+                        <span class="material-icons-outlined">visibility</span>
+                        {{ 'siteManagement.resources.view' | translate }}
+                      </a>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </article>
+
+      <article class="it-card panel">
+        <header class="panel-head">
+          <span class="panel-head__icon material-icons-outlined">local_shipping</span>
+          <div>
+            <h2>{{ 'siteManagement.resources.transportTitle' | translate }}</h2>
+            <p>{{ 'siteManagement.resources.transportHint' | translate }}</p>
+          </div>
+        </header>
+        @if (transportList().length === 0) {
+          <p class="panel-empty">{{ 'siteManagement.resources.transportEmpty' | translate }}</p>
+        } @else {
+          <div class="table-wrap">
+            <table class="site-table">
+              <thead>
+                <tr>
+                  <th>{{ 'siteManagement.resources.colUnit' | translate }}</th>
+                  <th>{{ 'siteManagement.transport.iot' | translate }}</th>
+                  <th>{{ 'siteManagement.resources.colFuel' | translate }}</th>
+                  <th class="site-table__actions">{{ 'siteManagement.list.colActions' | translate }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (unit of transportList(); track unit.id) {
+                  <tr>
+                    <td class="site-table__name">{{ unit.plateNumber }} · {{ unit.brand }} {{ unit.model }}</td>
+                    <td>{{ unit.iotNodeId }}</td>
+                    <td>
+                      <div class="fuel-cell">
+                        <span>{{ unit.fuelLevelPercent }}%</span>
+                        <div class="fuel-bar">
+                          <div
+                            class="fuel-bar__fill"
+                            [class.fuel-bar__fill--low]="unit.fuelLevelPercent < 30"
+                            [class.fuel-bar__fill--mid]="unit.fuelLevelPercent >= 30 && unit.fuelLevelPercent < 60"
+                            [style.width.%]="unit.fuelLevelPercent"
+                          ></div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="site-table__actions">
+                      <a [routerLink]="['/obras/transportes', unit.id]" class="btn-row-action">
+                        <span class="material-icons-outlined">visibility</span>
+                        {{ 'siteManagement.resources.view' | translate }}
+                      </a>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </article>
+    </div>
+  }
+</section>

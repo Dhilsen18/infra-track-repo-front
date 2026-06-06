@@ -1,0 +1,212 @@
+<section class="page">
+
+  @if (driver(); as d) {
+
+    <div class="detail-shell">
+
+      <nav class="page-nav">
+
+        <a routerLink="/conductores" class="page-back">
+
+          <span class="material-icons-outlined">arrow_back</span>
+
+          <span>{{ 'fleetOperations.driver.detail.back' | translate }}</span>
+
+        </a>
+
+      </nav>
+
+
+
+      <header class="driver-hero it-card">
+
+        <div class="driver-hero__main">
+
+          <div class="driver-hero__avatar">{{ d.fullName.charAt(0) }}</div>
+
+          <div>
+
+            <h1 class="driver-hero__name">{{ d.fullName }}</h1>
+
+            <p class="driver-hero__intro">{{ 'fleetOperations.driver.detail.intro' | translate }}</p>
+
+          </div>
+
+        </div>
+
+        <div class="driver-hero__meta">
+
+          <span
+
+            class="status-pill"
+
+            [class.status-pill--active]="d.status === 'active'"
+
+            [class.status-pill--inactive]="d.status === 'inactive'"
+
+          >
+
+            {{ statusKey(d.status) | translate }}
+
+          </span>
+
+          <span class="driver-hero__chip">
+
+            <span class="material-icons-outlined">badge</span>
+
+            {{ d.licenseNumber }}
+
+          </span>
+
+          <span class="driver-hero__chip">
+
+            <span class="material-icons-outlined">local_shipping</span>
+
+            {{ d.currentVehicle ?? '—' }}
+
+          </span>
+
+        </div>
+
+      </header>
+
+
+
+      <article class="it-card detail-grid">
+
+        <div class="detail-col">
+
+          <h3>
+
+            <span class="material-icons-outlined">contact_phone</span>
+
+            {{ 'fleetOperations.driver.detail.sectionContact' | translate }}
+
+          </h3>
+
+          <div class="info-item">
+
+            <dt>{{ 'fleetOperations.driver.detail.phone' | translate }}</dt>
+
+            <dd>{{ d.phone }}</dd>
+
+          </div>
+
+          <div class="info-item">
+
+            <dt>{{ 'fleetOperations.driver.detail.email' | translate }}</dt>
+
+            <dd>{{ d.email }}</dd>
+
+          </div>
+
+          <div class="info-item">
+
+            <dt>{{ 'fleetOperations.driver.detail.license' | translate }}</dt>
+
+            <dd>{{ d.licenseNumber }}</dd>
+
+          </div>
+
+        </div>
+
+        <div class="detail-col">
+
+          <h3>
+
+            <span class="material-icons-outlined">domain</span>
+
+            {{ 'fleetOperations.driver.detail.sectionOps' | translate }}
+
+          </h3>
+
+          <div class="info-item">
+
+            <dt>{{ 'fleetOperations.driver.detail.worksite' | translate }}</dt>
+
+            <dd>{{ d.assignedWorksite }}</dd>
+
+          </div>
+
+          <div class="info-item">
+
+            <dt>{{ 'fleetOperations.driver.detail.vehicle' | translate }}</dt>
+
+            <dd>{{ d.currentVehicle ?? '—' }}</dd>
+
+          </div>
+
+          <div class="info-item">
+
+            <dt>{{ 'fleetOperations.driver.detail.status' | translate }}</dt>
+
+            <dd>{{ statusKey(d.status) | translate }}</dd>
+
+          </div>
+
+        </div>
+
+        <div class="detail-col detail-col--metrics">
+
+          <h3>
+
+            <span class="material-icons-outlined">analytics</span>
+
+            {{ 'fleetOperations.driver.detail.sectionPerf' | translate }}
+
+          </h3>
+
+          <div class="metric-grid">
+
+            <div class="metric-box">
+
+              <span class="metric-box__value">{{ d.alertsLast30Days }}</span>
+
+              <span class="metric-box__label">{{ 'fleetOperations.driver.detail.alerts30' | translate }}</span>
+
+            </div>
+
+            <div class="metric-box">
+
+              <span class="metric-box__value">{{ d.fuelAlertsHistory }}</span>
+
+              <span class="metric-box__label">{{ 'fleetOperations.driver.detail.fuelHistory' | translate }}</span>
+
+            </div>
+
+            <div class="metric-box">
+
+              <span class="metric-box__value">{{ d.drivingHoursWeek }}<small>h</small></span>
+
+              <span class="metric-box__label">{{ 'fleetOperations.driver.detail.hoursWeek' | translate }}</span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </article>
+
+    </div>
+
+  } @else {
+
+    <nav class="page-nav">
+
+      <a routerLink="/conductores" class="page-back">
+
+        <span class="material-icons-outlined">arrow_back</span>
+
+        <span>{{ 'fleetOperations.driver.detail.back' | translate }}</span>
+
+      </a>
+
+    </nav>
+
+    <p class="it-page-intro">{{ 'fleetOperations.driver.detail.notFound' | translate }}</p>
+
+  }
+
+</section>
+

@@ -1,0 +1,196 @@
+<div class="cp">
+  <app-page-header-card
+    [eyebrowText]="store.companyName()"
+    titleKey="nav.controlPanel"
+    introKey="controlPanel.intro"
+  >
+    <span class="plan-badge">
+      <span class="material-icons-outlined" aria-hidden="true">verified</span>
+      {{ store.planLabelKey() | translate }}
+    </span>
+    <button type="button" class="cp-refresh" (click)="store.refresh()" [disabled]="store.loading()">
+      <span class="material-icons-outlined" [class.spin]="store.loading()">refresh</span>
+      {{ 'controlPanel.load.retry' | translate }}
+    </button>
+  </app-page-header-card>
+
+  @if (store.loadError()) {
+    <div class="cp-banner cp-banner--error" role="alert">
+      <span class="material-icons-outlined">error_outline</span>
+      {{ store.loadError() }}
+    </div>
+  }
+
+  @if (store.loading() && !store.kpis().length) {
+    <div class="cp-skeleton" aria-busy="true">
+      <div class="sk-row"></div>
+      <div class="sk-row sk-row--short"></div>
+    </div>
+  }
+
+  <section class="cp-section" aria-label="KPIs">
+    <div class="cp-kpis">
+      @for (kpi of store.kpis(); track kpi.id) {
+        <button
+          type="button"
+          class="kpi-card"
+          [class.kpi-card--selected]="isKpiSelected(kpi.id)"
+          [class.kpi-card--danger]="kpi.accent === 'danger'"
+          [class.kpi-card--gold]="kpi.accent === 'gold'"
+          (click)="store.selectKpi(kpi.id)"
+        >
+          <span class="kpi-icon-wrap" [class.kpi-icon-wrap--danger]="kpi.accent === 'danger'">
+            <span class="material-icons-outlined kpi-icon">{{ kpi.icon }}</span>
+          </span>
+          <div class="kpi-body">
+            <span class="kpi-value">
+              {{ kpi.value }}
+              @if (kpi.unitKey) {
+                <span class="kpi-unit">{{ kpi.unitKey | translate }}</span>
+              }
+            </span>
+            <span class="kpi-label">{{ ('controlPanel.kpis.' + kpi.id) | translate }}</span>
+          </div>
+        </button>
+      }
+    </div>
+  </section>
+
+  <section class="cp-section">
+    <app-control-panel-charts [machinery]="store.machinery()" [iotNodes]="store.iotNodes()" />
+  </section>
+
+  <section class="cp-section cp-split">
+    <article class="cp-card cp-map-card">
+      <div class="cp-card-head">
+        <div class="cp-card-title-row">
+          <span class="cp-card-icon-wrap" aria-hidden="true">
+            <span class="cp-card-icon material-icons-outlined">map</span>
+          </span>
+          <div>
+            <h2>{{ 'controlPanel.map.worksitesTitle' | translate }}</h2>
+            <p class="cp-card-hint">{{ 'controlPanel.map.worksitesHint' | translate }}</p>
+          </div>
+        </div>
+      </div>
+      @if (store.mapMarkers().length === 0) {
+        <div class="cp-empty-map">
+          <span class="material-icons-outlined" aria-hidden="true">location_off</span>
+          {{ 'controlPanel.map.empty' | translate }}
+        </div>
+      } @else {
+        <app-control-panel-worksites-map [markers]="store.mapMarkers()" />
+        <ul class="worksite-chips">
+          @for (ws of store.activeWorksites(); track ws.id) {
+            <li class="worksite-chip">
+              <span class="worksite-chip__index">{{ $index + 1 }}</span>
+              <div class="worksite-chip__body">
+                <span class="worksite-chip__name">{{ ws.name }}</span>
+                <span class="worksite-chip__meta">{{ ws.city }} · {{ ws.staffCount }} {{ 'controlPanel.map.staffShort' | translate }}</span>
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    </article>
+
+    <article class="cp-card cp-alerts-card">
+      <div class="cp-card-head cp-card-head--row">
+        <div class="cp-card-head__text">
+          <div class="cp-card-title-row">
+            <span class="cp-card-icon material-icons-outlined" aria-hidden="true">notifications_active</span>
+            <h2>{{ 'controlPanel.alerts.title' | translate }}</h2>
+            @if (store.alerts().length) {
+              <span class="cp-count-badge">{{ store.alerts().length }}</span>
+            }
+          </div>
+          <p class="cp-card-hint">{{ 'controlPanel.alerts.subtitle' | translate }}</p>
+        </div>
+      </div>
+      @if (store.acknowledgeError()) {
+        <div class="cp-banner cp-banner--warn">{{ store.acknowledgeError() }}</div>
+      }
+      @if (store.alerts().length === 0) {
+        <p class="cp-empty">{{ 'controlPanel.alerts.empty' | translate }}</p>
+      } @else {
+        <ul class="alert-list">
+          @for (alert of store.alerts(); track alert.id) {
+            <li
+              class="alert-item"
+              [class.alert-item--critical]="alert.severity === 'critical'"
+              [class.alert-item--warning]="alert.severity === 'warning'"
+              [class.alert-item--resolved]="alert.isAcknowledged"
+            >
+              <div class="alert-top">
+                <span class="alert-time">{{ alert.timeLabel }}</span>
+                @if (alert.isAcknowledged) {
+                  <span class="pill pill--ok">{{ 'controlPanel.status.resolved' | translate }}</span>
+                } @else if (alert.severity === 'critical') {
+                  <span class="pill pill--crit">{{ 'controlPanel.severity.critical' | translate }}</span>
+                } @else {
+                  <span class="pill pill--warn">{{ 'controlPanel.severity.warning' | translate }}</span>
+                }
+              </div>
+              <div class="alert-machine">{{ alert.machineName }}</div>
+              <div class="alert-desc">{{ alert.description }}</div>
+              <div class="alert-meta">
+                <span class="alert-type">{{ ('controlPanel.alertTypes.' + alert.alertType) | translate }}</span>
+                @if (!alert.isAcknowledged) {
+                  <button
+                    type="button"
+                    class="btn-ack"
+                    (click)="store.acknowledgeAlert(alert.id)"
+                    [disabled]="store.acknowledgePendingFor() === alert.id || !store.httpPutDeleteEnabled()"
+                  >
+                    @if (store.acknowledgePendingFor() === alert.id) {
+                      <span class="material-icons-outlined spin-sm">refresh</span>
+                    } @else {
+                      <span class="material-icons-outlined">task_alt</span>
+                    }
+                    {{ 'controlPanel.alerts.acknowledge' | translate }}
+                  </button>
+                }
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    </article>
+  </section>
+
+  <section class="cp-section">
+    <article class="cp-card cp-maint">
+      <div class="cp-card-head cp-card-head--row">
+        <div class="cp-card-head__text">
+          <div class="cp-card-title-row">
+            <h2>{{ 'controlPanel.maintenance.title' | translate }}</h2>
+          </div>
+        </div>
+      </div>
+      @if (store.maintenanceRows().length === 0) {
+        <p class="cp-empty">{{ 'controlPanel.maintenance.empty' | translate }}</p>
+      } @else {
+        <div class="table-wrap">
+          <table class="cp-table">
+            <thead>
+              <tr>
+                <th>{{ 'controlPanel.alerts.machine' | translate }}</th>
+                <th>{{ 'controlPanel.maintenance.serviceDate' | translate }}</th>
+                <th class="cp-table__num">{{ 'controlPanel.maintenance.costPen' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of store.maintenanceRows(); track row.id) {
+                <tr>
+                  <td class="cp-table__machine">{{ row.machineName }}</td>
+                  <td>{{ row.serviceDate }}</td>
+                  <td class="cp-table__num">S/ {{ row.cost | number : '1.0-0' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </article>
+  </section>
+</div>

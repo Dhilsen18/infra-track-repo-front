@@ -1,0 +1,87 @@
+<section class="page">
+  <app-page-header-card
+    titleKey="fleetOperations.transport.list.title"
+    introKey="fleetOperations.transport.list.intro"
+  >
+    @if (limits.canAddTransport(store.transports().length)) {
+      <a routerLink="/transportes/nuevo" class="btn-primary">
+        <span class="material-icons-outlined">add</span>
+        {{ 'fleetOperations.transport.list.add' | translate }}
+      </a>
+    } @else {
+      <button type="button" class="btn-primary" disabled>
+        <span class="material-icons-outlined">add</span>
+        {{ 'fleetOperations.transport.list.add' | translate }}
+      </button>
+    }
+  </app-page-header-card>
+
+  @if (!limits.canAddTransport(store.transports().length)) {
+    <div class="it-banner it-banner--warn" role="status">
+      <span class="material-icons-outlined">info</span>
+      {{
+        'planLimits.bannerTransport'
+          | translate: {
+              current: store.transports().length,
+              max: limits.displayMax(limits.limits().maxTransports)
+            }
+      }}
+      {{ 'planLimits.upgradeHint' | translate }}
+    </div>
+  }
+
+  @if (store.snack(); as key) {
+    <div
+      class="it-banner"
+      [class.it-banner--success]="!key.startsWith('planLimits.')"
+      [class.it-banner--warn]="key.startsWith('planLimits.')"
+      role="status"
+    >
+      <span class="material-icons-outlined">check_circle</span>
+      {{ key | translate }}
+    </div>
+  }
+
+  <article class="it-card table-card">
+    <div class="table-wrap">
+      <table class="ops-table">
+        <thead>
+          <tr>
+            <th>{{ 'fleetOperations.transport.list.colPlate' | translate }}</th>
+            <th>{{ 'fleetOperations.transport.list.colModel' | translate }}</th>
+            <th>{{ 'fleetOperations.transport.list.colTank' | translate }}</th>
+            <th>{{ 'fleetOperations.transport.list.colIot' | translate }}</th>
+            <th>{{ 'fleetOperations.transport.list.colStatus' | translate }}</th>
+            <th class="ops-table__actions">{{ 'fleetOperations.transport.list.colActions' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of store.transports(); track row.id) {
+            <tr>
+              <td class="ops-table__name">{{ row.plate }}</td>
+              <td>{{ row.brand }} {{ row.model }}</td>
+              <td class="ops-table__num">{{ row.tankCapacityLiters }} L</td>
+              <td>{{ row.iotNodeSerial ?? '—' }}</td>
+              <td>
+                <span
+                  class="status-pill"
+                  [class.status-pill--active]="row.status === 'active'"
+                  [class.status-pill--maintenance]="row.status === 'maintenance'"
+                  [class.status-pill--inactive]="row.status === 'inactive'"
+                >
+                  {{ statusKey(row.status) | translate }}
+                </span>
+              </td>
+              <td class="ops-table__actions">
+                <a [routerLink]="['/transportes', row.id]" class="btn-row-action">
+                  <span class="material-icons-outlined">visibility</span>
+                  {{ 'fleetOperations.transport.list.view' | translate }}
+                </a>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </article>
+</section>

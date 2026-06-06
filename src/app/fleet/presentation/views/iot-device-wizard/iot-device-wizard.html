@@ -1,0 +1,167 @@
+<section class="page">
+  <nav class="page-nav">
+    <a routerLink="/dispositivos" class="page-back">
+      <span class="material-icons-outlined">arrow_back</span>
+      <span>{{ 'fleetOperations.iot.wizard.backToList' | translate }}</span>
+    </a>
+  </nav>
+
+  <article class="form-panel it-card">
+    <header class="form-panel__head">
+      <h1 class="form-panel__title">{{ 'fleetOperations.iot.wizard.title' | translate }}</h1>
+      <p class="form-panel__intro">{{ 'fleetOperations.iot.wizard.intro' | translate }}</p>
+    </header>
+
+    @if (errorKey(); as err) {
+      <div class="it-banner it-banner--error">{{ err | translate }}</div>
+    }
+
+    <form class="iot-form" (ngSubmit)="submit()">
+        <div class="iot-form-grid">
+          <div class="iot-field">
+            <label class="iot-label" for="iot-id">{{ 'fleetOperations.iot.wizard.id' | translate }}</label>
+            <input id="iot-id" class="iot-input" type="text" [value]="store.previewNextIotId()" readonly />
+          </div>
+
+          <div class="iot-field">
+            <label class="iot-label" for="iot-node-type">{{ 'fleetOperations.iot.wizard.nodeType' | translate }} *</label>
+            <select
+              id="iot-node-type"
+              class="iot-input iot-select"
+              [ngModel]="nodeType()"
+              (ngModelChange)="onNodeTypeChange($event)"
+              name="nodeType"
+            >
+              <option value="fuel_tank">{{ 'fleetOperations.iot.nodeTypes.fuel_tank' | translate }}</option>
+              <option value="engine">{{ 'fleetOperations.iot.nodeTypes.engine' | translate }}</option>
+              <option value="gps">{{ 'fleetOperations.iot.nodeTypes.gps' | translate }}</option>
+              <option value="vibration">{{ 'fleetOperations.iot.nodeTypes.vibration' | translate }}</option>
+              <option value="can_bus">{{ 'fleetOperations.iot.nodeTypes.can_bus' | translate }}</option>
+            </select>
+          </div>
+
+          <div class="iot-field iot-field--full">
+            <label class="iot-label" for="iot-location">{{ 'fleetOperations.iot.wizard.location' | translate }} *</label>
+            <input
+              id="iot-location"
+              class="iot-input"
+              type="text"
+              [ngModel]="installLocation()"
+              (ngModelChange)="installLocation.set($event)"
+              name="location"
+              [placeholder]="'fleetOperations.iot.wizard.locationPlaceholder' | translate"
+            />
+          </div>
+
+          <div class="iot-field">
+            <label class="iot-label" for="iot-serial">{{ 'fleetOperations.iot.wizard.serial' | translate }} *</label>
+            <input
+              id="iot-serial"
+              class="iot-input"
+              type="text"
+              [ngModel]="serialNumber()"
+              (ngModelChange)="serialNumber.set($event)"
+              name="serial"
+            />
+          </div>
+
+          <div class="iot-field">
+            <label class="iot-label" for="iot-firmware">{{ 'fleetOperations.iot.wizard.firmware' | translate }} *</label>
+            <input
+              id="iot-firmware"
+              class="iot-input"
+              type="text"
+              [ngModel]="firmwareVersion()"
+              (ngModelChange)="firmwareVersion.set($event)"
+              name="firmware"
+            />
+          </div>
+
+          <div class="iot-field">
+            <label class="iot-label" for="iot-battery">{{ 'fleetOperations.iot.wizard.battery' | translate }}</label>
+            <input
+              id="iot-battery"
+              class="iot-input"
+              type="number"
+              step="0.01"
+              [ngModel]="batteryVoltage()"
+              (ngModelChange)="batteryVoltage.set($event)"
+              name="battery"
+            />
+          </div>
+
+          <div class="iot-field">
+            <label class="iot-label" for="iot-calibration">{{ 'fleetOperations.iot.wizard.calibration' | translate }}</label>
+            <input
+              id="iot-calibration"
+              class="iot-input"
+              type="date"
+              [ngModel]="calibrationDate()"
+              (ngModelChange)="calibrationDate.set($event)"
+              name="calibration"
+            />
+          </div>
+
+          <div class="iot-field">
+            <label class="iot-label" for="iot-fuel-drop">{{ 'fleetOperations.iot.wizard.fuelDrop' | translate }}</label>
+            <input
+              id="iot-fuel-drop"
+              class="iot-input"
+              type="number"
+              [ngModel]="fuelDropPercent()"
+              (ngModelChange)="fuelDropPercent.set($event)"
+              name="fuelDrop"
+            />
+          </div>
+
+          <div class="iot-field">
+            <label class="iot-label" for="iot-fuel-min">{{ 'fleetOperations.iot.wizard.fuelMinutes' | translate }}</label>
+            <input
+              id="iot-fuel-min"
+              class="iot-input"
+              type="number"
+              [ngModel]="fuelDropMinutes()"
+              (ngModelChange)="fuelDropMinutes.set($event)"
+              name="fuelMinutes"
+            />
+          </div>
+
+          <div class="iot-field">
+            <label class="iot-label" for="iot-max-temp">{{ 'fleetOperations.iot.wizard.maxTemp' | translate }}</label>
+            <input
+              id="iot-max-temp"
+              class="iot-input"
+              type="number"
+              [ngModel]="maxEngineTempC()"
+              (ngModelChange)="maxEngineTempC.set($event)"
+              name="maxTemp"
+            />
+          </div>
+        </div>
+
+        <div class="it-banner it-banner--info">
+          {{ 'fleetOperations.iot.wizard.paramsHint' | translate }}
+        </div>
+
+        <h2 class="iot-params-title">{{ 'fleetOperations.iot.wizard.paramsTitle' | translate }}</h2>
+        <div class="param-grid">
+          @for (param of paramKeys; track param) {
+            <label class="param-toggle">
+              <span class="param-toggle__label">{{ ('fleetOperations.iot.params.' + param) | translate }}</span>
+              <mat-slide-toggle
+                [checked]="params()[param]"
+                (change)="toggleParam(param, $event.checked)"
+              />
+            </label>
+          }
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-primary btn-primary--teal">
+            <span class="material-icons-outlined">check</span>
+            {{ 'fleetOperations.iot.wizard.submit' | translate }}
+          </button>
+        </div>
+    </form>
+  </article>
+</section>

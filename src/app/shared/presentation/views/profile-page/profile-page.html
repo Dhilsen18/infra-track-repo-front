@@ -1,0 +1,141 @@
+<section class="page profile-page">
+  <app-page-header-card titleKey="profile.uiTitle" introKey="profile.uiIntro" />
+
+  @if (userData(); as user) {
+    <article class="it-card profile-card">
+      <header class="profile-hero">
+        <div class="profile-hero__main">
+          <div class="profile-hero__avatar">{{ userInitial() }}</div>
+          <div>
+            <h2 class="profile-hero__name">{{ user.name }}</h2>
+            <p class="profile-hero__email">{{ user.email }}</p>
+          </div>
+        </div>
+        <div class="profile-hero__aside">
+          <span class="status-pill status-pill--active">{{ user.roleKey | translate }}</span>
+          <span class="profile-source-badge">{{ 'profile.badgeStatic' | translate }}</span>
+        </div>
+      </header>
+
+      <div class="profile-body">
+        <h3 class="profile-section-title">
+          <span class="material-icons-outlined">badge</span>
+          {{ 'profile.accountSection' | translate }}
+        </h3>
+
+        <div class="profile-fields">
+          <div class="profile-field">
+            <label>{{ 'profile.operatorName' | translate }}</label>
+            <div class="profile-field__value">{{ user.name }}</div>
+          </div>
+          <div class="profile-field">
+            <label>{{ 'profile.userIdLabel' | translate }}</label>
+            <div class="profile-field__value">{{ user.id }}</div>
+          </div>
+          <div class="profile-field">
+            <label>{{ 'profile.emailLabel' | translate }}</label>
+            <div class="profile-field__value">{{ user.email }}</div>
+          </div>
+          <div class="profile-field">
+            <label>{{ 'profile.fieldRole' | translate }}</label>
+            <div class="profile-field__value">{{ user.roleKey | translate }}</div>
+          </div>
+
+          @if (iam.isOwner()) {
+            <div class="profile-field">
+              <label>{{ 'profile.fieldCompany' | translate }}</label>
+              <div class="profile-field__value">{{ user.companyName }}</div>
+            </div>
+            <div class="profile-field">
+              <label>{{ 'profile.fieldCompanyCode' | translate }}</label>
+              <div class="profile-field__value">{{ user.companyCode }}</div>
+            </div>
+            <div class="profile-field">
+              <label>{{ 'profile.fieldJobTitle' | translate }}</label>
+              <div class="profile-field__value">{{ user.jobTitleKey | translate }}</div>
+            </div>
+          } @else {
+            <div class="profile-field">
+              <label>{{ 'profile.operatorPhone' | translate }}</label>
+              <div class="profile-field__value">{{ user.phone }}</div>
+            </div>
+            <div class="profile-field">
+              <label>{{ 'profile.operatorLicense' | translate }}</label>
+              <div class="profile-field__value">{{ user.licenseNumber }}</div>
+            </div>
+            <div class="profile-field">
+              <label>{{ 'profile.fieldWorksite' | translate }}</label>
+              <div class="profile-field__value">{{ user.assignedWorksite }}</div>
+            </div>
+            <div class="profile-field">
+              <label>{{ 'profile.operatorState' | translate }}</label>
+              <div class="profile-field__value">{{ user.operatorStatusKey | translate }}</div>
+            </div>
+          }
+
+          <div class="profile-field">
+            <label>{{ 'profile.memberSince' | translate }}</label>
+            <div class="profile-field__value">{{ user.createdAt | date: 'mediumDate' }}</div>
+          </div>
+          <div class="profile-field">
+            <label>{{ 'profile.accountStatus' | translate }}</label>
+            <div class="profile-field__value">
+              {{ user.isActive ? ('profile.accountActive' | translate) : ('profile.accountInactive' | translate) }}
+            </div>
+          </div>
+          <div class="profile-field profile-field--full">
+            <label>{{ 'profile.fieldPassword' | translate }}</label>
+            <div class="profile-field__value profile-field__value--masked">••••••••</div>
+          </div>
+        </div>
+
+        @if (iam.isOwner() && currentPlan(); as plan) {
+          <div class="profile-plan">
+            <h3 class="profile-section-title">
+              <span class="material-icons-outlined">card_membership</span>
+              {{ 'profile.subscription.sectionTitle' | translate }}
+            </h3>
+            <p class="profile-plan__intro">{{ 'profile.subscription.sectionSubtitle' | translate }}</p>
+
+            <div class="profile-plan-row">
+              <div class="profile-field profile-field--plan">
+                <label>{{ 'profile.subscription.fieldPlan' | translate }}</label>
+                <div class="profile-field__value profile-field__value--plan">
+                  {{ plan.nameKey | translate }}
+                </div>
+              </div>
+              <a routerLink="/subscription-plans" class="btn-plan">
+                <span class="material-icons-outlined">credit_card</span>
+                {{ 'profile.subscription.updatePlan' | translate }}
+              </a>
+            </div>
+
+            <div class="profile-fields profile-fields--compact">
+              <div class="profile-field">
+                <label>{{ 'profile.subscription.fieldPrice' | translate }}</label>
+                <div class="profile-field__value">{{ plan.priceKey | translate }}</div>
+              </div>
+              <div class="profile-field">
+                <label>{{ 'profile.subscription.fieldStatus' | translate }}</label>
+                <div class="profile-field__value">{{ plan.statusKey | translate }}</div>
+              </div>
+              <div class="profile-field">
+                <label>{{ 'profile.subscription.fieldRenew' | translate }}</label>
+                <div class="profile-field__value">
+                  {{ plan.autoRenew ? ('profile.subscription.yes' | translate) : ('profile.subscription.no' | translate) }}
+                </div>
+              </div>
+            </div>
+
+            <div class="profile-plan-actions">
+              <button type="button" class="btn-primary" (click)="goToPlans()">
+                <span class="material-icons-outlined">layers</span>
+                {{ 'profile.subscription.viewPlans' | translate }}
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    </article>
+  }
+</section>

@@ -1,0 +1,341 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.plans-page {
+  min-height: 100vh;
+  background: #f0f4f8;
+}
+
+.plans-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.75rem 0;
+}
+
+.plans-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #64748b;
+  box-shadow: 0 2px 10px rgba(26, 43, 76, 0.07);
+  cursor: pointer;
+  font-family: inherit;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.plans-back:hover {
+  color: #1a2b4c;
+  border-color: #2d8a8a;
+}
+
+.plans-back .material-icons-outlined {
+  font-size: 20px;
+}
+
+.plans-shell {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 1.5rem 1.75rem 2.5rem;
+}
+
+.plans-shell--success {
+  max-width: 480px;
+  padding-top: 2rem;
+}
+
+.plans-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.plans-header--center {
+  margin-bottom: 1.5rem;
+}
+
+.plans-logo {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  margin-bottom: 0.45rem;
+}
+
+.plans-brand {
+  margin: 0 0 0.85rem;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #1a2b4c;
+}
+
+.plans-brand-accent {
+  color: #c9a227;
+}
+
+.plans-header h1 {
+  margin: 0 0 1rem;
+  font-size: clamp(1.65rem, 3vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #1a2b4c;
+  line-height: 1.15;
+}
+
+.plans-subtitle {
+  margin: 0 auto;
+  max-width: 36rem;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #64748b;
+}
+
+.plans-entity {
+  display: inline-block;
+  margin: 1rem 0 0;
+  padding: 0.5rem 0.85rem;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  font-size: 0.8125rem;
+  color: #475569;
+}
+
+.plans-entity-label {
+  margin-right: 0.35rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #2d8a8a;
+}
+
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.15rem;
+  align-items: stretch;
+}
+
+.plan-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 1.35rem 1.25rem 1.25rem;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-top: 3px solid #1a2b4c;
+  box-shadow: 0 4px 18px rgba(26, 43, 76, 0.06);
+  transition:
+    box-shadow 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.plan-card:hover {
+  box-shadow: 0 8px 28px rgba(26, 43, 76, 0.1);
+}
+
+.plan-card--featured {
+  border-color: #2d8a8a;
+  border-top-color: #2d8a8a;
+  box-shadow: 0 10px 32px rgba(45, 138, 138, 0.14);
+}
+
+.plan-card--enterprise {
+  border-top-color: #c9a227;
+}
+
+.plan-badge {
+  position: absolute;
+  top: -0.55rem;
+  right: 1rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  background: #c9a227;
+  color: #1a2b4c;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.plan-name {
+  margin: 0 0 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.plan-price {
+  margin: 0 0 0.35rem;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #1a2b4c;
+}
+
+.plan-tagline {
+  margin: 0 0 1rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: #64748b;
+  min-height: 2.4rem;
+}
+
+.plan-features {
+  flex: 1;
+  margin: 0 0 1.15rem;
+  padding: 0;
+  list-style: none;
+}
+
+.plan-features li {
+  position: relative;
+  padding-left: 1rem;
+  margin-bottom: 0.45rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: #475569;
+}
+
+.plan-features li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55rem;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #2d8a8a;
+}
+
+.plan-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  width: 100%;
+  height: 42px;
+  margin-top: auto;
+  padding: 0 1rem;
+  border: none;
+  border-radius: 8px;
+  background: #1a2b4c;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.plan-cta:hover {
+  background: #243a66;
+}
+
+.plan-cta .material-icons-outlined {
+  font-size: 1.1rem;
+}
+
+.plan-cta--outline {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #1a2b4c;
+}
+
+.plan-cta--outline:hover {
+  background: #f8fafc;
+  border-color: #2d8a8a;
+  color: #2d8a8a;
+}
+
+.plans-success-icon {
+  font-size: 3rem;
+  color: #2d8a8a;
+  margin-bottom: 0.5rem;
+}
+
+.plans-success-box {
+  padding: 1.1rem 1.25rem;
+  margin-bottom: 1.25rem;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid rgba(45, 138, 138, 0.3);
+  border-top: 3px solid #2d8a8a;
+  box-shadow: 0 4px 18px rgba(26, 43, 76, 0.06);
+  text-align: center;
+}
+
+.plans-success-box strong {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.875rem;
+  color: #1a2b4c;
+}
+
+.plans-code {
+  display: block;
+  font-family: ui-monospace, monospace;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #1a2b4c;
+}
+
+.plans-success-hint {
+  margin: 0.65rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: #64748b;
+}
+
+.plans-dashboard-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  width: 100%;
+  height: 44px;
+  border: none;
+  border-radius: 8px;
+  background: #1a2b4c;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.plans-dashboard-cta:hover {
+  background: #243a66;
+}
+
+@media (max-width: 960px) {
+  .plans-grid {
+    grid-template-columns: 1fr;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .plans-shell {
+    padding: 1rem 1.15rem 2rem;
+  }
+
+  .plans-top {
+    padding: 1rem 1.15rem 0;
+  }
+}

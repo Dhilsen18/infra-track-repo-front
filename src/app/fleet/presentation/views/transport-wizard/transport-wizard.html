@@ -1,0 +1,160 @@
+<section class="page">
+  <nav class="page-nav">
+    <a routerLink="/transportes" class="page-back">
+      <span class="material-icons-outlined">arrow_back</span>
+      <span>{{ 'fleetOperations.transport.wizard.backToList' | translate }}</span>
+    </a>
+  </nav>
+
+  <article class="form-panel it-card">
+    <header class="form-panel__head">
+      <h1 class="form-panel__title">{{ 'fleetOperations.transport.wizard.title' | translate }}</h1>
+      <p class="form-panel__intro">{{ 'fleetOperations.transport.wizard.intro' | translate }}</p>
+    </header>
+
+    @if (errorKey(); as err) {
+      <div class="it-banner it-banner--error">{{ err | translate }}</div>
+    }
+
+    <form class="transport-form" (ngSubmit)="submit()">
+        <div class="transport-form-grid">
+          <div class="transport-field">
+            <label class="transport-label" for="transport-id">{{ 'fleetOperations.transport.wizard.id' | translate }}</label>
+            <input id="transport-id" class="transport-input" type="text" [value]="store.previewNextTransportId()" readonly />
+          </div>
+
+          <div class="transport-field">
+            <label class="transport-label" for="transport-unit-type">{{ 'fleetOperations.transport.wizard.unitType' | translate }} *</label>
+            <select
+              id="transport-unit-type"
+              class="transport-input transport-select"
+              [ngModel]="unitType()"
+              (ngModelChange)="onUnitTypeChange($event)"
+              name="unitType"
+            >
+              <option value="dump_truck">{{ 'fleetOperations.transport.unitTypes.dump_truck' | translate }}</option>
+              <option value="excavator">{{ 'fleetOperations.transport.unitTypes.excavator' | translate }}</option>
+              <option value="loader">{{ 'fleetOperations.transport.unitTypes.loader' | translate }}</option>
+              <option value="mixer">{{ 'fleetOperations.transport.unitTypes.mixer' | translate }}</option>
+              <option value="crane_truck">{{ 'fleetOperations.transport.unitTypes.crane_truck' | translate }}</option>
+            </select>
+          </div>
+
+          <div class="transport-field">
+            <label class="transport-label" for="transport-plate">{{ 'fleetOperations.transport.wizard.plate' | translate }} *</label>
+            <input
+              id="transport-plate"
+              class="transport-input"
+              type="text"
+              [ngModel]="plate()"
+              (ngModelChange)="plate.set($event)"
+              name="plate"
+            />
+          </div>
+
+          <div class="transport-field">
+            <label class="transport-label" for="transport-brand">{{ 'fleetOperations.transport.wizard.brand' | translate }} *</label>
+            <input
+              id="transport-brand"
+              class="transport-input"
+              type="text"
+              [ngModel]="brand()"
+              (ngModelChange)="brand.set($event)"
+              name="brand"
+            />
+          </div>
+
+          <div class="transport-field">
+            <label class="transport-label" for="transport-model">{{ 'fleetOperations.transport.wizard.model' | translate }} *</label>
+            <input
+              id="transport-model"
+              class="transport-input"
+              type="text"
+              [ngModel]="model()"
+              (ngModelChange)="model.set($event)"
+              name="model"
+            />
+          </div>
+
+          <div class="transport-field">
+            <label class="transport-label" for="transport-fuel">{{ 'fleetOperations.transport.wizard.fuelType' | translate }} *</label>
+            <select
+              id="transport-fuel"
+              class="transport-input transport-select"
+              [ngModel]="fuelType()"
+              (ngModelChange)="fuelType.set($event)"
+              name="fuelType"
+            >
+              <option value="diesel">{{ 'fleetOperations.transport.wizard.diesel' | translate }}</option>
+              <option value="gasoline">{{ 'fleetOperations.transport.wizard.gasoline' | translate }}</option>
+            </select>
+          </div>
+
+          <div class="transport-field">
+            <label class="transport-label" for="transport-tank">{{ 'fleetOperations.transport.wizard.tank' | translate }}</label>
+            <input
+              id="transport-tank"
+              class="transport-input"
+              type="number"
+              [ngModel]="tankCapacityLiters()"
+              (ngModelChange)="tankCapacityLiters.set($event)"
+              name="tank"
+            />
+          </div>
+
+          <div class="transport-field">
+            <label class="transport-label" for="transport-consumption">{{ 'fleetOperations.transport.wizard.consumption' | translate }}</label>
+            <input
+              id="transport-consumption"
+              class="transport-input"
+              type="number"
+              step="0.1"
+              [ngModel]="consumptionPerHour()"
+              (ngModelChange)="consumptionPerHour.set($event)"
+              name="consumption"
+            />
+          </div>
+
+          <div class="transport-field transport-field--full">
+            <label class="transport-label" for="transport-iot">{{ 'fleetOperations.transport.wizard.iotLink' | translate }}</label>
+            <select
+              id="transport-iot"
+              class="transport-input transport-select"
+              [ngModel]="iotNodeSerial()"
+              (ngModelChange)="iotNodeSerial.set($event)"
+              name="iot"
+            >
+              <option [ngValue]="null">—</option>
+              @for (serial of iotOptions(); track serial) {
+                <option [ngValue]="serial">{{ serial }}</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <div class="it-banner it-banner--info">
+          {{ 'fleetOperations.transport.wizard.paramsHint' | translate }}
+        </div>
+
+        <h2 class="transport-params-title">{{ 'fleetOperations.transport.wizard.paramsTitle' | translate }}</h2>
+        <div class="param-grid">
+          @for (param of paramKeys; track param) {
+            <label class="param-toggle">
+              <span class="param-toggle__label">{{ ('fleetOperations.transport.params.' + param) | translate }}</span>
+              <mat-slide-toggle
+                [checked]="params()[param]"
+                (change)="toggleParam(param, $event.checked)"
+              />
+            </label>
+          }
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-primary btn-primary--teal">
+            <span class="material-icons-outlined">check</span>
+            {{ 'fleetOperations.transport.wizard.submit' | translate }}
+          </button>
+        </div>
+    </form>
+  </article>
+</section>

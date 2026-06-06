@@ -1,0 +1,106 @@
+<app-auth-split-shell
+  heroEyebrowKey="signup.ownerHeroEyebrow"
+  heroTitleKey="signup.ownerHeroTitle"
+  heroDescKey="signup.ownerHeroDesc"
+>
+  <div class="auth-panel auth-panel--wide">
+    <button
+      type="button"
+      class="auth-back"
+      (click)="back()"
+      [attr.aria-label]="'signup.backToOwnerLogin' | translate"
+    >
+      <span class="material-icons-outlined">arrow_back</span>
+    </button>
+
+    <div class="auth-card auth-card--wide auth-card--compact">
+      <header class="auth-header auth-header--center">
+        <img class="auth-logo" src="/imagenes/logo_infratrack-sinfondo.png" alt="InfraTrack" />
+        <p class="auth-brand-name">Infra<span class="auth-brand-accent">Track</span></p>
+        <span class="auth-entity-badge">{{ 'login.entityOwnerBadge' | translate }}</span>
+        <h1>{{ 'signup.getStartedHeading' | translate }}</h1>
+      </header>
+
+      @if (errorMessage(); as errKey) {
+        <p class="auth-error">{{ errKey | translate }}</p>
+      }
+
+      <form class="auth-form" (ngSubmit)="submit()">
+        <div class="auth-form-grid">
+          <div class="auth-field-group">
+            <label class="auth-label" for="owner-full-name">{{ 'signup.fullName' | translate }}</label>
+            <input
+              id="owner-full-name"
+              class="auth-input"
+              [ngModel]="fullName()"
+              (ngModelChange)="fullName.set($event)"
+              name="fullName"
+              [placeholder]="'signup.fullNamePlaceholder' | translate"
+              autocomplete="name"
+            />
+            <p class="auth-field-hint auth-field-hint--empty" aria-hidden="true">.</p>
+          </div>
+
+          <div class="auth-field-group">
+            <label class="auth-label" for="owner-company">{{ 'signup.companyLegalName' | translate }}</label>
+            <input
+              id="owner-company"
+              class="auth-input"
+              [ngModel]="companyLegalName()"
+              (ngModelChange)="companyLegalName.set($event)"
+              name="companyLegalName"
+              [placeholder]="'signup.companyLegalNamePlaceholder' | translate"
+            />
+            <p class="auth-field-hint">{{ 'signup.companyLegalNameHint' | translate }}</p>
+          </div>
+
+          <div class="auth-field-group">
+            <label class="auth-label" for="owner-signup-email">{{ 'login.email' | translate }}</label>
+            <input
+              id="owner-signup-email"
+              class="auth-input"
+              type="email"
+              [ngModel]="email()"
+              (ngModelChange)="email.set($event)"
+              name="email"
+              [placeholder]="'login.emailPlaceholder' | translate"
+              autocomplete="email"
+            />
+            <p class="auth-field-hint auth-field-hint--empty" aria-hidden="true">.</p>
+          </div>
+
+          <div class="auth-field-group">
+            <label class="auth-label" for="owner-signup-password">{{ 'login.password' | translate }}</label>
+            <div class="auth-input-wrap">
+              <input
+                id="owner-signup-password"
+                class="auth-input"
+                [type]="hidePassword() ? 'password' : 'text'"
+                [ngModel]="password()"
+                (ngModelChange)="password.set($event)"
+                name="password"
+                [placeholder]="'login.passwordPlaceholder' | translate"
+                autocomplete="new-password"
+              />
+              <button type="button" class="auth-toggle-password" (click)="togglePassword()">
+                <span class="material-icons-outlined">{{
+                  hidePassword() ? 'visibility' : 'visibility_off'
+                }}</span>
+              </button>
+            </div>
+            <p class="auth-field-hint">{{ 'signup.passwordHint' | translate }}</p>
+          </div>
+        </div>
+
+        <button class="auth-submit" type="submit">
+          {{ 'signup.continueToPlans' | translate }}
+        </button>
+      </form>
+
+      <p class="auth-footer-link">
+        {{ 'signup.alreadyHaveAccount' | translate }}
+        <a routerLink="/iam/owner/login">{{ 'signup.signInLink' | translate }}</a>
+      </p>
+    </div>
+  </div>
+</app-auth-split-shell>

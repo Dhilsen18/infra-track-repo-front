@@ -1,0 +1,61 @@
+<section class="page">
+  <app-page-header-card
+    titleKey="siteManagement.assignment.title"
+    introKey="siteManagement.assignment.intro"
+  />
+
+  @if (store.snack(); as key) {
+    <div
+      class="it-banner"
+      [class.it-banner--success]="key.endsWith('.success')"
+      [class.it-banner--error]="key.endsWith('.errorSelection')"
+    >
+      <span class="material-icons-outlined">{{ key.endsWith('.success') ? 'check_circle' : 'error_outline' }}</span>
+      {{ key | translate }}
+    </div>
+  }
+
+  <div class="assignment-split">
+    <article class="it-card panel">
+      <h2>{{ 'siteManagement.assignment.staffPanel' | translate }}</h2>
+      <ul class="check-list">
+        @for (member of store.staff(); track member.id) {
+          @if (member.status === 'active') {
+            <li>
+              <mat-checkbox
+                [checked]="isSelected(member.id)"
+                (change)="toggle(member.id)"
+              >
+                <span class="check-label">
+                  <strong>{{ member.fullName }}</strong>
+                  <span>{{ member.email }}</span>
+                </span>
+              </mat-checkbox>
+            </li>
+          }
+        }
+      </ul>
+    </article>
+
+    <article class="it-card panel">
+      <h2>{{ 'siteManagement.assignment.worksitePanel' | translate }}</h2>
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>{{ 'siteManagement.assignment.selectWorksite' | translate }}</mat-label>
+        <mat-select
+          [value]="store.assignmentWorksiteId()"
+          (valueChange)="onWorksiteChange($event)"
+        >
+          <mat-option [value]="null">—</mat-option>
+          @for (site of store.activeWorksites(); track site.id) {
+            <mat-option [value]="site.id">{{ site.name }} ({{ site.city }})</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <button type="button" class="btn-primary assign-btn" (click)="confirm()">
+        <span class="material-icons-outlined">done_all</span>
+        {{ 'siteManagement.assignment.confirm' | translate }}
+      </button>
+    </article>
+  </div>
+</section>

@@ -1,0 +1,66 @@
+/* Global Styles — tema Material (M3) para formularios, selects, paginador, etc. */
+@use './material-theme.scss';
+
+@import 'leaflet/dist/leaflet.css';
+
+:root {
+  --it-yellow: #FFC107;
+  --it-yellow-hover: #FFB300;
+  --it-dark: #121212;
+  --it-dark-surface: #1E1E1E;
+  --it-text-light: #E0E0E0;
+  --it-text-muted: #9E9E9E;
+  --it-border: rgba(255, 255, 255, 0.1);
+  --it-sidebar-width: 280px;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: #F5F7FA;
+  height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Panel del mat-select en maquinaria: más ancho y sombra legible */
+.fleet-select-panel.mat-mdc-select-panel,
+.reports-select-panel.mat-mdc-select-panel {
+  min-width: 14rem;
+  border-radius: 10px;
+  box-shadow: 0 12px 40px rgba(15, 23, 42, 0.16);
+}
+
+/* Modales: cabecera, cuerpo y pie con separación clara */
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  border-radius: 12px !important;
+  overflow: hidden;
+}
+
+.mat-mdc-dialog-container h2[mat-dialog-title],
+.mat-mdc-dialog-container [mat-dialog-title] {
+  margin: 0 !important;
+  padding: 1rem 1.25rem !important;
+  border-bottom: 1px solid #e8edf2;
+  background: #fafbfc;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  color: #0f172a;
+}
+
+.mat-mdc-dialog-container mat-dialog-content,
+.mat-mdc-dialog-container .mat-mdc-dialog-content {
+  padding: 1.15rem 1.25rem !important;
+}
+
+.mat-mdc-dialog-container mat-dialog-actions,
+.mat-mdc-dialog-container .mat-mdc-dialog-actions {
+  margin: 0 !important;
+  padding: 0.75rem 1.25rem !important;
+  border-top: 1px solid #e8edf2;
+  background: #fafbfc;
+  min-height: auto !important;
+}

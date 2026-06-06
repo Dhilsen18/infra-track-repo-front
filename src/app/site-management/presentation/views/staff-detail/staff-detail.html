@@ -1,0 +1,93 @@
+<section class="page">
+  @if (member(); as m) {
+    <nav class="page-nav">
+      <a [routerLink]="backLink()" class="page-back">
+        <span class="material-icons-outlined">arrow_back</span>
+        <span>{{ 'siteManagement.staffDetail.back' | translate }}</span>
+      </a>
+    </nav>
+
+    <article class="site-form-panel it-card">
+      <header class="site-form-panel__head">
+        <div class="site-form-panel__main">
+          <p class="detail-eyebrow">{{ 'siteManagement.resources.staffTitle' | translate }}</p>
+          <h1 class="site-form-panel__title">{{ m.fullName }}</h1>
+          <p class="site-form-panel__intro">{{ 'siteManagement.staffDetail.intro' | translate }}</p>
+          <div class="detail-badges">
+            <span
+              class="status-pill"
+              [class.status-pill--active]="m.status === 'active'"
+              [class.status-pill--inactive]="m.status === 'inactive'"
+            >
+              {{ m.status === 'active' ? ('siteManagement.status.active' | translate) : ('siteManagement.transportStatus.inactive' | translate) }}
+            </span>
+            <span class="type-pill">{{ m.licenseNumber }}</span>
+          </div>
+        </div>
+      </header>
+
+      <h2 class="site-detail-section-title">{{ 'siteManagement.staffDetail.profile' | translate }}</h2>
+      <div class="site-detail-fields">
+        <div class="site-detail-field site-detail-field--full">
+          <span class="site-detail-field__label">{{ 'login.email' | translate }}</span>
+          <span class="site-detail-field__value">{{ m.email }}</span>
+        </div>
+        <div class="site-detail-field">
+          <span class="site-detail-field__label">{{ 'siteManagement.staffDetail.phone' | translate }}</span>
+          <span class="site-detail-field__value">{{ m.phone }}</span>
+        </div>
+        <div class="site-detail-field">
+          <span class="site-detail-field__label">{{ 'siteManagement.staffDetail.license' | translate }}</span>
+          <span class="site-detail-field__value">{{ m.licenseNumber }}</span>
+        </div>
+        <div class="site-detail-field site-detail-field--full">
+          <span class="site-detail-field__label">{{ 'siteManagement.staffDetail.vehicle' | translate }}</span>
+          <span class="site-detail-field__value">{{ m.currentVehicle ?? '—' }}</span>
+        </div>
+      </div>
+
+      <h2 class="site-detail-section-title">{{ 'siteManagement.staffDetail.performance' | translate }}</h2>
+      <div class="site-detail-fields">
+        <div class="site-detail-field" [class.site-detail-field--warn]="m.alertsLast30Days > 0">
+          <span class="site-detail-field__label">{{ 'siteManagement.staffDetail.alerts' | translate }}</span>
+          <span class="site-detail-field__value">{{ m.alertsLast30Days }}</span>
+        </div>
+        <div class="site-detail-field">
+          <span class="site-detail-field__label">{{ 'siteManagement.staffDetail.hours' | translate }}</span>
+          <span class="site-detail-field__value">{{ m.drivingHoursWeek }} h</span>
+        </div>
+      </div>
+
+      <h2 class="site-detail-section-title">{{ 'siteManagement.staffDetail.assignedSites' | translate }}</h2>
+      @if (assignedSites().length === 0) {
+        <p class="panel-empty">{{ 'siteManagement.staffDetail.noSites' | translate }}</p>
+      } @else {
+        <div class="table-wrap">
+          <table class="site-table">
+            <thead>
+              <tr>
+                <th>{{ 'siteManagement.list.colName' | translate }}</th>
+                <th>{{ 'siteManagement.list.colCity' | translate }}</th>
+                <th class="site-table__actions">{{ 'siteManagement.list.colActions' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (site of assignedSites(); track site.id) {
+                <tr>
+                  <td class="site-table__name">{{ site.name }}</td>
+                  <td>{{ site.city }}</td>
+                  <td class="site-table__actions">
+                    <a [routerLink]="['/obras', site.id]" class="btn-row-action">
+                      <span class="material-icons-outlined">visibility</span>
+                      {{ 'siteManagement.list.viewDetail' | translate }}
+                    </a>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </article>
+  }
+</section>

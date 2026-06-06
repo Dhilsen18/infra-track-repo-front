@@ -1,0 +1,72 @@
+<h2 mat-dialog-title>{{ 'configuration.addMaint.title' | translate }}</h2>
+
+<mat-dialog-content class="cfd">
+  @if (!machineryList().length && !saving()) {
+    <p class="cfd__warn">{{ 'configuration.addMaint.noMachinery' | translate }}</p>
+  }
+  <form [formGroup]="form" (ngSubmit)="submit()" class="cfd__form">
+    <mat-form-field appearance="outline">
+      <mat-label>{{ 'configuration.addMaint.machineryId' | translate }}</mat-label>
+      <mat-select formControlName="machineryId" [disabled]="!machineryList().length">
+        @for (m of machineryList(); track m.id) {
+          <mat-option [value]="m.id">{{ m.plateNumber }} · #{{ m.id }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>{{ 'configuration.addMaint.serviceType' | translate }}</mat-label>
+      <mat-select formControlName="serviceType">
+        <mat-option value="oil_change">{{ 'configuration.addMaint.typeOil' | translate }}</mat-option>
+        <mat-option value="filter">{{ 'configuration.addMaint.typeFilter' | translate }}</mat-option>
+        <mat-option value="tires">{{ 'configuration.addMaint.typeTires' | translate }}</mat-option>
+        <mat-option value="general">{{ 'configuration.addMaint.typeGeneral' | translate }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>{{ 'configuration.addMaint.description' | translate }}</mat-label>
+      <textarea matInput formControlName="description" rows="3"></textarea>
+    </mat-form-field>
+
+    <div class="cfd__row">
+      <mat-form-field appearance="outline" class="cfd__grow">
+        <mat-label>{{ 'configuration.addMaint.costPen' | translate }}</mat-label>
+        <input matInput type="number" formControlName="costPen" min="0" step="0.01" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="cfd__grow">
+        <mat-label>{{ 'configuration.addMaint.engineHours' | translate }}</mat-label>
+        <input matInput type="number" formControlName="engineHoursAtService" min="0" step="1" />
+      </mat-form-field>
+    </div>
+
+    <div class="cfd__row">
+      <mat-form-field appearance="outline" class="cfd__grow">
+        <mat-label>{{ 'configuration.addMaint.serviceDate' | translate }}</mat-label>
+        <input matInput type="date" formControlName="serviceDate" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="cfd__grow">
+        <mat-label>{{ 'configuration.addMaint.nextServiceDate' | translate }}</mat-label>
+        <input matInput type="date" formControlName="nextServiceDate" />
+        <mat-hint>{{ 'configuration.addMaint.nextHint' | translate }}</mat-hint>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" mat-dialog-close [disabled]="saving()">{{ 'configuration.addMaint.cancel' | translate }}</button>
+  <button
+    mat-flat-button
+    color="primary"
+    type="button"
+    (click)="submit()"
+    [disabled]="saving() || !machineryList().length"
+  >
+    @if (saving()) {
+      <mat-progress-spinner diameter="20" mode="indeterminate" />
+    } @else {
+      {{ 'configuration.addMaint.save' | translate }}
+    }
+  </button>
+</mat-dialog-actions>

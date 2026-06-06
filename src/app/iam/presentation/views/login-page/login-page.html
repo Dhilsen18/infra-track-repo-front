@@ -1,0 +1,63 @@
+<div class="access-page">
+  <section class="access-hero" aria-label="InfraTrack">
+    <div class="hero-slideshow">
+      <div class="hero-slide hero-slide--1"></div>
+      <div class="hero-slide hero-slide--2"></div>
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">{{ 'login.heroEyebrow' | translate }}</p>
+      <h1 class="hero-title">{{ 'login.heroTitle' | translate }}</h1>
+      <p class="hero-desc">{{ 'login.brandDescription' | translate }}</p>
+    </div>
+    <div class="hero-lang">
+      <app-language-switcher />
+    </div>
+  </section>
+
+  <section class="access-selector" aria-label="Entity type selection">
+    <div class="selector-card">
+      <header class="selector-brand">
+        <img
+          class="selector-logo"
+          src="/imagenes/logo_infratrack-sinfondo.png"
+          [attr.alt]="'app.title' | translate"
+        />
+        <p class="selector-brand-name">
+          Infra<span class="selector-brand-accent">Track</span>
+        </p>
+        <p class="selector-brand-tag">{{ 'login.platformTagline' | translate }}</p>
+      </header>
+
+      <p class="selector-label">{{ 'login.selectEntityType' | translate }}</p>
+
+      <div class="entity-list">
+        <button type="button" class="entity-option" (click)="selectEntity('owner')">
+          <span class="entity-icon entity-icon--owner" aria-hidden="true">
+            <span class="material-icons-outlined">apartment</span>
+          </span>
+          <span class="entity-copy">
+            <span class="entity-badge">{{ 'login.entityOwnerBadge' | translate }}</span>
+            <span class="entity-name">{{ 'login.entityOwnerName' | translate }}</span>
+            <span class="entity-desc">{{ 'login.entityOwnerDesc' | translate }}</span>
+          </span>
+          <span class="material-icons-outlined entity-chevron" aria-hidden="true">chevron_right</span>
+        </button>
+
+        <button type="button" class="entity-option" (click)="selectEntity('admin')">
+          <span class="entity-icon entity-icon--admin" aria-hidden="true">
+            <span class="material-icons-outlined">local_shipping</span>
+          </span>
+          <span class="entity-copy">
+            <span class="entity-badge">{{ 'login.entityAdminBadge' | translate }}</span>
+            <span class="entity-name">{{ 'login.entityAdminName' | translate }}</span>
+            <span class="entity-desc">{{ 'login.entityAdminDesc' | translate }}</span>
+          </span>
+          <span class="material-icons-outlined entity-chevron" aria-hidden="true">chevron_right</span>
+        </button>
+      </div>
+
+      <p class="selector-footnote">{{ 'login.footnote' | translate }}</p>
+    </div>
+  </section>
+</div>

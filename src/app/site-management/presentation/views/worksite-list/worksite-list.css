@@ -1,0 +1,87 @@
+@import '../../styles/site-page.css';
+
+.summary-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.85rem;
+  margin-bottom: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .summary-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.summary-card {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 1rem 1.1rem;
+  border-radius: var(--site-radius);
+  background: var(--site-surface);
+  border: 1px solid var(--site-border);
+  box-shadow: var(--site-shadow-sm);
+  overflow: hidden;
+}
+
+.summary-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--site-navy-mid);
+}
+
+.summary-card--active::before {
+  background: var(--site-teal);
+}
+
+.summary-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: #f1f5f9;
+  color: var(--site-navy-mid);
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.summary-card--active .summary-card__icon {
+  background: rgba(45, 138, 138, 0.1);
+  color: var(--site-teal);
+}
+
+.summary-card__value {
+  display: block;
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--site-text);
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.summary-card__label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--site-text-muted);
+  margin-top: 0.15rem;
+}
+
+.table-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.table-card .table-wrap {
+  border: none;
+  border-radius: 0;
+}

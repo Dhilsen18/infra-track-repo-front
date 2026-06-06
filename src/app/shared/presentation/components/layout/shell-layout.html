@@ -1,0 +1,304 @@
+<div class="shell-container">
+
+  <nav class="sidebar" [class.sidebar-hidden]="!isSidebarOpen()">
+
+    <div class="sidebar-header">
+
+      <div class="logo-container">
+
+        <img src="/imagenes/logo_infratrack-sinfondo.png" [attr.alt]="'app.title' | translate" class="logo-img" />
+
+        <div class="logo-text">
+
+          <span class="brand">InfraTrack</span>
+
+          <span class="brand-sub">Sensor</span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+    <div class="sidebar-body">
+
+      <div class="sidebar-scrollable">
+
+        <ul class="nav-links">
+
+          <li class="nav-section">{{ 'shell.navSection' | translate }}</li>
+
+
+
+          @if (role() === 'owner') {
+
+            <li>
+
+              <a routerLink="/control-panel" routerLinkActive="active" class="nav-item">
+
+                <span class="material-icons-outlined nav-icon">dashboard</span>
+
+                <span class="nav-text">{{ 'nav.controlPanel' | translate }}</span>
+
+              </a>
+
+            </li>
+
+          }
+
+
+
+          @if (role() === 'admin') {
+
+            <li>
+
+              <a routerLink="/operacion" routerLinkActive="active" class="nav-item">
+
+                <span class="material-icons-outlined nav-icon">speed</span>
+
+                <span class="nav-text">{{ 'nav.opsDashboard' | translate }}</span>
+
+              </a>
+
+            </li>
+
+            <li>
+
+              <a routerLink="/dispositivos" routerLinkActive="active" class="nav-item">
+
+                <span class="material-icons-outlined nav-icon">sensors</span>
+
+                <span class="nav-text">{{ 'nav.iotNodes' | translate }}</span>
+
+              </a>
+
+            </li>
+
+            <li>
+
+              <a routerLink="/transportes" routerLinkActive="active" class="nav-item">
+
+                <span class="material-icons-outlined nav-icon">local_shipping</span>
+
+                <span class="nav-text">{{ 'nav.transports' | translate }}</span>
+
+              </a>
+
+            </li>
+
+            @if (planLimits.limits().drivers) {
+
+              <li>
+
+                <a routerLink="/conductores" routerLinkActive="active" class="nav-item">
+
+                  <span class="material-icons-outlined nav-icon">badge</span>
+
+                  <span class="nav-text">{{ 'nav.drivers' | translate }}</span>
+
+                </a>
+
+              </li>
+
+            }
+
+          }
+
+
+
+          @if (role() === 'owner') {
+
+            <li>
+
+              <a routerLink="/obras" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-item">
+
+                <span class="material-icons-outlined nav-icon">domain</span>
+
+                <span class="nav-text">{{ 'nav.worksites' | translate }}</span>
+
+              </a>
+
+            </li>
+
+            <li>
+
+              <a routerLink="/obras/mapa" routerLinkActive="active" class="nav-item">
+
+                <span class="material-icons-outlined nav-icon">map</span>
+
+                <span class="nav-text">{{ 'nav.establishmentsMap' | translate }}</span>
+
+              </a>
+
+            </li>
+
+            <li>
+
+              <a routerLink="/obras/personal/asignar" routerLinkActive="active" class="nav-item">
+
+                <span class="material-icons-outlined nav-icon">person_add</span>
+
+                <span class="nav-text">{{ 'nav.assignStaff' | translate }}</span>
+
+              </a>
+
+            </li>
+
+            @if (canAddWorksite()) {
+
+              <li>
+
+                <a routerLink="/obras/nueva" routerLinkActive="active" class="nav-item">
+
+                  <span class="material-icons-outlined nav-icon">add_location_alt</span>
+
+                  <span class="nav-text">{{ 'nav.newWorksite' | translate }}</span>
+
+                </a>
+
+              </li>
+
+            }
+
+            <li>
+
+              <a routerLink="/reports-analytics" routerLinkActive="active" class="nav-item">
+
+                <span class="material-icons-outlined nav-icon">insert_chart</span>
+
+                <span class="nav-text">{{ 'nav.reportsAnalytics' | translate }}</span>
+
+              </a>
+
+            </li>
+
+          }
+
+        </ul>
+
+      </div>
+
+    </div>
+
+
+
+    <div class="sidebar-footer">
+
+      <div class="sidebar-user">
+
+        <div class="sidebar-user__avatar">{{ userInitial() }}</div>
+
+        <div class="sidebar-user__info">
+
+          <span class="sidebar-user__name">{{ iam.username() ?? '—' }}</span>
+
+          <span class="sidebar-user__role">{{ roleLabelKey() | translate }}</span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </nav>
+
+
+
+  <div class="main-wrapper" [class.expanded]="!isSidebarOpen()">
+
+    <header class="topbar">
+
+      <div class="topbar-left">
+
+        <button type="button" class="menu-btn" (click)="toggleSidebar()" [attr.aria-label]="'shell.toggleSidebarAria' | translate">
+
+          <span class="material-icons-outlined">menu</span>
+
+        </button>
+
+        <span class="topbar-title">{{ 'shell.systemTitle' | translate }}</span>
+
+      </div>
+
+      <div class="topbar-right">
+
+        <app-language-switcher mode="header" />
+
+        <div class="profile-menu" #profileMenu>
+
+          <button
+
+            type="button"
+
+            class="profile-menu__trigger"
+
+            (click)="toggleProfileMenu()"
+
+            [attr.aria-expanded]="profileMenuOpen()"
+
+            [attr.aria-label]="'shell.viewProfile' | translate"
+
+          >
+
+            <span class="profile-menu__avatar">{{ userInitial() }}</span>
+
+            <span class="material-icons-outlined profile-menu__chevron">expand_more</span>
+
+          </button>
+
+          @if (profileMenuOpen()) {
+
+            <div class="profile-menu__dropdown" role="menu">
+
+              <div class="profile-menu__header">
+
+                <span class="profile-menu__name">{{ iam.username() ?? '—' }}</span>
+
+                <span class="profile-menu__role">{{ roleLabelKey() | translate }}</span>
+
+              </div>
+
+              <a routerLink="/profile" class="profile-menu__item" role="menuitem" (click)="closeProfileMenu()">
+
+                <span class="material-icons-outlined">account_circle</span>
+
+                {{ 'shell.viewProfile' | translate }}
+
+              </a>
+
+              <button type="button" class="profile-menu__item profile-menu__item--danger" role="menuitem" (click)="signOut()">
+
+                <span class="material-icons-outlined">logout</span>
+
+                {{ 'shell.logout' | translate }}
+
+              </button>
+
+            </div>
+
+          }
+
+        </div>
+
+      </div>
+
+    </header>
+
+
+
+    <main class="content">
+
+      <div class="content-inner">
+
+        <router-outlet />
+
+      </div>
+
+    </main>
+
+  </div>
+
+</div>
+

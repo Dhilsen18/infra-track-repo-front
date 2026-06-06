@@ -1,0 +1,94 @@
+<section class="page">
+  @if (worksite(); as site) {
+    <nav class="page-nav">
+      <a routerLink="/obras" class="page-back">
+        <span class="material-icons-outlined">arrow_back</span>
+        <span>{{ 'siteManagement.detail.backToList' | translate }}</span>
+      </a>
+    </nav>
+
+    <article class="site-form-panel it-card">
+      <header class="site-form-panel__head">
+        <div class="site-form-panel__main">
+          <p class="detail-eyebrow">{{ 'siteManagement.breadcrumb.worksites' | translate }}</p>
+          <h1 class="site-form-panel__title">{{ site.name }}</h1>
+          <p class="site-form-panel__intro">{{ 'siteManagement.detail.intro' | translate }}</p>
+          <div class="detail-badges">
+            <span
+              class="status-pill"
+              [class.status-pill--active]="site.status === 'active'"
+              [class.status-pill--finished]="site.status === 'finished'"
+            >
+              {{ ('siteManagement.status.' + site.status) | translate }}
+            </span>
+            <span class="type-pill">{{ ('siteManagement.types.' + site.type) | translate }}</span>
+          </div>
+        </div>
+        <div class="site-form-panel__actions">
+          <button type="button" class="btn-primary" (click)="goResources()">
+            <span class="material-icons-outlined">inventory_2</span>
+            {{ 'siteManagement.detail.viewResources' | translate }}
+          </button>
+        </div>
+      </header>
+
+      <h2 class="site-detail-section-title">{{ 'siteManagement.detail.technicalTitle' | translate }}</h2>
+      <div class="site-detail-fields">
+        <div class="site-detail-field">
+          <span class="site-detail-field__label">{{ 'siteManagement.detail.id' | translate }}</span>
+          <span class="site-detail-field__value">{{ site.id }}</span>
+        </div>
+        <div class="site-detail-field">
+          <span class="site-detail-field__label">{{ 'siteManagement.list.colType' | translate }}</span>
+          <span class="site-detail-field__value">{{ ('siteManagement.types.' + site.type) | translate }}</span>
+        </div>
+        <div class="site-detail-field site-detail-field--full">
+          <span class="site-detail-field__label">{{ 'siteManagement.detail.name' | translate }}</span>
+          <span class="site-detail-field__value">{{ site.name }}</span>
+        </div>
+        <div class="site-detail-field">
+          <span class="site-detail-field__label">{{ 'siteManagement.list.colCity' | translate }}</span>
+          <span class="site-detail-field__value">{{ site.city }}</span>
+        </div>
+        <div class="site-detail-field">
+          <span class="site-detail-field__label">{{ 'siteManagement.list.colStatus' | translate }}</span>
+          <span class="site-detail-field__value">{{ ('siteManagement.status.' + site.status) | translate }}</span>
+        </div>
+        <div class="site-detail-field site-detail-field--full">
+          <span class="site-detail-field__label">{{ 'siteManagement.detail.address' | translate }}</span>
+          <span class="site-detail-field__value">{{ site.address }}</span>
+        </div>
+        <div class="site-detail-field site-detail-field--full">
+          <span class="site-detail-field__label">{{ 'siteManagement.detail.leadEngineer' | translate }}</span>
+          <span class="site-detail-field__value">{{ site.leadEngineer }}</span>
+        </div>
+      </div>
+
+      <h2 class="site-detail-section-title">{{ 'siteManagement.detail.metricsTitle' | translate }}</h2>
+      <div class="site-detail-fields">
+        <div class="site-detail-field">
+          <span class="site-detail-field__label">{{ 'siteManagement.detail.transports' | translate }}</span>
+          <span class="site-detail-field__value">{{ site.transportCount }}</span>
+        </div>
+        <div class="site-detail-field">
+          <span class="site-detail-field__label">{{ 'siteManagement.detail.staff' | translate }}</span>
+          <span class="site-detail-field__value">{{ site.staffCount }}</span>
+        </div>
+        @if (site.latitude != null && site.longitude != null) {
+          <div class="site-detail-field site-detail-field--full">
+            <span class="site-detail-field__label">{{ 'siteManagement.detail.coords' | translate }}</span>
+            <span class="site-detail-field__value">{{ site.latitude }}, {{ site.longitude }}</span>
+          </div>
+        }
+      </div>
+    </article>
+  } @else {
+    <nav class="page-nav">
+      <a routerLink="/obras" class="page-back">
+        <span class="material-icons-outlined">arrow_back</span>
+        <span>{{ 'siteManagement.detail.backToList' | translate }}</span>
+      </a>
+    </nav>
+    <div class="it-banner it-banner--warn">{{ 'siteManagement.detail.notFound' | translate }}</div>
+  }
+</section>

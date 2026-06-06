@@ -1,0 +1,131 @@
+<section class="page">
+  <nav class="page-nav">
+    <a routerLink="/obras" class="page-back">
+      <span class="material-icons-outlined">arrow_back</span>
+      <span>{{ 'siteManagement.form.backToList' | translate }}</span>
+    </a>
+  </nav>
+
+  <article class="site-form-panel it-card">
+    <header class="site-form-panel__head">
+      <div class="site-form-panel__main">
+        <p class="detail-eyebrow">{{ 'siteManagement.breadcrumb.worksites' | translate }}</p>
+        <h1 class="site-form-panel__title">{{ 'siteManagement.form.title' | translate }}</h1>
+        <p class="site-form-panel__intro">{{ 'siteManagement.form.intro' | translate }}</p>
+      </div>
+    </header>
+
+    @if (errorKey(); as key) {
+      <div class="it-banner it-banner--warn">{{ key | translate }}</div>
+    }
+
+    <form class="site-form" (ngSubmit)="submit()">
+      <div class="site-form-grid">
+        <div class="site-field site-field--full">
+          <label class="site-label" for="worksite-name">{{ 'siteManagement.form.name' | translate }}</label>
+          <input
+            id="worksite-name"
+            class="site-input"
+            type="text"
+            [ngModel]="name()"
+            (ngModelChange)="name.set($event)"
+            name="name"
+            autocomplete="organization"
+          />
+        </div>
+
+        <div class="site-field">
+          <label class="site-label" for="worksite-city">{{ 'siteManagement.list.colCity' | translate }}</label>
+          <input
+            id="worksite-city"
+            class="site-input"
+            type="text"
+            [ngModel]="city()"
+            (ngModelChange)="city.set($event)"
+            name="city"
+          />
+        </div>
+
+        <div class="site-field">
+          <label class="site-label" for="worksite-type">{{ 'siteManagement.list.colType' | translate }}</label>
+          <select
+            id="worksite-type"
+            class="site-input site-select"
+            [ngModel]="type()"
+            (ngModelChange)="type.set($event)"
+            name="type"
+          >
+            <option value="road">{{ 'siteManagement.types.road' | translate }}</option>
+            <option value="building">{{ 'siteManagement.types.building' | translate }}</option>
+            <option value="warehouse">{{ 'siteManagement.types.warehouse' | translate }}</option>
+          </select>
+        </div>
+
+        <div class="site-field site-field--full">
+          <label class="site-label" for="worksite-address">{{ 'siteManagement.detail.address' | translate }}</label>
+          <input
+            id="worksite-address"
+            class="site-input"
+            type="text"
+            [ngModel]="address()"
+            (ngModelChange)="address.set($event)"
+            name="address"
+          />
+        </div>
+
+        <div class="site-field site-field--full">
+          <label class="site-label" for="worksite-lead">{{ 'siteManagement.detail.leadEngineer' | translate }}</label>
+          <input
+            id="worksite-lead"
+            class="site-input"
+            type="text"
+            [ngModel]="leadEngineer()"
+            (ngModelChange)="leadEngineer.set($event)"
+            name="lead"
+          />
+        </div>
+
+        <div class="site-field">
+          <label class="site-label" for="worksite-lat">{{ 'siteManagement.form.latitude' | translate }}</label>
+          <input
+            id="worksite-lat"
+            class="site-input"
+            type="text"
+            inputmode="decimal"
+            [ngModel]="latitude()"
+            (ngModelChange)="latitude.set($event)"
+            name="lat"
+            placeholder="-12.046"
+          />
+        </div>
+
+        <div class="site-field">
+          <label class="site-label" for="worksite-lng">{{ 'siteManagement.form.longitude' | translate }}</label>
+          <input
+            id="worksite-lng"
+            class="site-input"
+            type="text"
+            inputmode="decimal"
+            [ngModel]="longitude()"
+            (ngModelChange)="longitude.set($event)"
+            name="lng"
+            placeholder="-77.042"
+          />
+        </div>
+      </div>
+
+      <p class="form-hint">
+        <span class="material-icons-outlined">info</span>
+        {{ 'siteManagement.form.coordsHint' | translate }}
+      </p>
+
+      <div class="form-actions">
+        <a routerLink="/obras" class="btn-secondary">{{ 'common.cancel' | translate }}</a>
+        <button type="submit" class="btn-primary">
+          <span class="material-icons-outlined">save</span>
+          {{ 'siteManagement.form.submit' | translate }}
+        </button>
+      </div>
+    </form>
+  </article>
+</section>

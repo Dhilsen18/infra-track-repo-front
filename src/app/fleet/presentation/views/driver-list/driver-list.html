@@ -1,0 +1,48 @@
+<section class="page">
+  <app-page-header-card
+    titleKey="fleetOperations.driver.list.title"
+    introKey="fleetOperations.driver.list.intro"
+  />
+
+  <article class="it-card table-card">
+    <div class="table-wrap">
+      <table class="ops-table">
+        <thead>
+          <tr>
+            <th>{{ 'fleetOperations.driver.list.colName' | translate }}</th>
+            <th>{{ 'fleetOperations.driver.list.colStatus' | translate }}</th>
+            <th>{{ 'fleetOperations.driver.list.colLicense' | translate }}</th>
+            <th>{{ 'fleetOperations.driver.list.colVehicle' | translate }}</th>
+            <th>{{ 'fleetOperations.driver.list.colAlerts' | translate }}</th>
+            <th class="ops-table__actions">{{ 'fleetOperations.driver.list.colActions' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of store.drivers(); track row.id) {
+            <tr>
+              <td class="ops-table__name">{{ row.fullName }}</td>
+              <td>
+                <span
+                  class="status-pill"
+                  [class.status-pill--active]="row.status === 'active'"
+                  [class.status-pill--inactive]="row.status === 'inactive'"
+                >
+                  {{ statusKey(row.status) | translate }}
+                </span>
+              </td>
+              <td>{{ row.licenseNumber }}</td>
+              <td>{{ row.currentVehicle ?? '—' }}</td>
+              <td class="ops-table__num">{{ row.alertsLast30Days }}</td>
+              <td class="ops-table__actions">
+                <a [routerLink]="['/conductores', row.id]" class="btn-row-action">
+                  <span class="material-icons-outlined">visibility</span>
+                  {{ 'fleetOperations.driver.list.view' | translate }}
+                </a>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </article>
+</section>

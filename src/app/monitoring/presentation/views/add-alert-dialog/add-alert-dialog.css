@@ -1,0 +1,19 @@
+.dlg {
+  min-width: min(440px, 92vw);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-top: 0.35rem;
+}
+
+.full {
+  width: 100%;
+}
+
+mat-dialog-actions mat-progress-spinner {
+  display: inline-block;
+  vertical-align: middle;
+}

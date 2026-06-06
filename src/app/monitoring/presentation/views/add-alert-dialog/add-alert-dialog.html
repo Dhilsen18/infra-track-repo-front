@@ -1,0 +1,39 @@
+<h2 mat-dialog-title>{{ 'reports.alertsCenter.createTitle' | translate }}</h2>
+<mat-dialog-content class="dlg">
+  <form [formGroup]="form" class="form">
+    <mat-form-field appearance="outline">
+      <mat-label>{{ 'reports.alertsCenter.machineryId' | translate }}</mat-label>
+      <input matInput type="number" formControlName="machineryId" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>{{ 'reports.alertsCenter.filterType' | translate }}</mat-label>
+      <mat-select formControlName="type">
+        <mat-option value="fuel_theft">{{ 'reports.alertsCenter.type.fuel_theft' | translate }}</mat-option>
+        <mat-option value="idle_excess">{{ 'reports.alertsCenter.type.idle_excess' | translate }}</mat-option>
+        <mat-option value="maintenance">{{ 'reports.alertsCenter.type.maintenance' | translate }}</mat-option>
+        <mat-option value="geofence">{{ 'reports.alertsCenter.type.geofence' | translate }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>{{ 'reports.alertsCenter.filterSeverity' | translate }}</mat-label>
+      <mat-select formControlName="severity">
+        <mat-option value="critical">{{ 'reports.alertsCenter.sev.critical' | translate }}</mat-option>
+        <mat-option value="warning">{{ 'reports.alertsCenter.sev.warning' | translate }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>{{ 'reports.alertsCenter.colDesc' | translate }}</mat-label>
+      <textarea matInput rows="3" formControlName="description"></textarea>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button type="button" mat-dialog-close>{{ 'reports.alertsCenter.cancel' | translate }}</button>
+  <button mat-flat-button color="primary" type="button" (click)="submit()" [disabled]="saving()">
+    @if (saving()) {
+      <mat-progress-spinner diameter="20" mode="indeterminate" />
+    } @else {
+      {{ 'reports.alertsCenter.createSubmit' | translate }}
+    }
+  </button>
+</mat-dialog-actions>

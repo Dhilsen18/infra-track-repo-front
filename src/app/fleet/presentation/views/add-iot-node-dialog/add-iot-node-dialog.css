@@ -1,0 +1,36 @@
+.cfd {
+  min-width: min(100%, 440px);
+  padding-top: 0.25rem;
+}
+
+.cfd__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding-top: 0.5rem;
+}
+
+.cfd__row {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.cfd__grow {
+  flex: 1 1 160px;
+}
+
+.cfd__warn {
+  margin: 0 0 0.5rem;
+  font-size: 0.875rem;
+  color: var(--it-text-secondary);
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-dialog-actions mat-progress-spinner {
+  vertical-align: middle;
+  margin-inline: 0.35rem;
+}

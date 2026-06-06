@@ -1,0 +1,10 @@
+@import '../../styles/site-detail.css';
+
+.fuel-bar--inline {
+  margin-top: 0.45rem;
+  height: 8px;
+}
+
+.fuel-warn-banner {
+  margin-top: 0.75rem;
+}

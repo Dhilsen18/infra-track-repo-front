@@ -1,0 +1,109 @@
+<section class="page est-map-page">
+  <app-page-header-card
+    titleKey="siteManagement.establishmentsMap.title"
+    introKey="siteManagement.establishmentsMap.intro"
+  >
+    <div class="est-map-page__badge">
+      <span class="est-map-page__badge-label">{{ 'siteManagement.establishmentsMap.badge' | translate }}</span>
+      <strong>{{ store.worksites().length }}</strong>
+    </div>
+  </app-page-header-card>
+
+  <div class="est-map-layout it-card">
+    <aside class="est-map-sidebar">
+      <label class="est-map-search">
+        <span class="material-icons-outlined">search</span>
+        <input
+          type="search"
+          [ngModel]="search()"
+          (ngModelChange)="search.set($event)"
+          [placeholder]="'siteManagement.establishmentsMap.searchPlaceholder' | translate"
+          autocomplete="off"
+        />
+      </label>
+
+      <ul class="est-map-list" role="listbox" [attr.aria-label]="'siteManagement.establishmentsMap.title' | translate">
+        @for (site of filteredSites(); track site.id) {
+          <li>
+            <button
+              type="button"
+              class="est-map-list__item"
+              [class.est-map-list__item--selected]="selectedId() === site.id"
+              (click)="selectSite(site)"
+              role="option"
+              [attr.aria-selected]="selectedId() === site.id"
+            >
+              <span [class]="statusDotClass(site.status)"></span>
+              <span class="est-map-list__text">
+                <span class="est-map-list__name">{{ site.name }}</span>
+                <span class="est-map-list__city">{{ site.city }}</span>
+              </span>
+              @if (site.latitude == null || site.longitude == null) {
+                <span class="est-map-list__no-gps" title="{{ 'siteManagement.establishmentsMap.noCoords' | translate }}">
+                  <span class="material-icons-outlined">location_off</span>
+                </span>
+              }
+            </button>
+          </li>
+        } @empty {
+          <li class="est-map-list__empty">{{ 'siteManagement.establishmentsMap.emptySearch' | translate }}</li>
+        }
+      </ul>
+
+      <p class="est-map-sidebar__foot">
+        {{ 'siteManagement.establishmentsMap.mappableHint' | translate:{ count: mappableCount() } }}
+      </p>
+    </aside>
+
+    <div class="est-map-panel">
+      <div class="est-map-canvas" #mapHost role="application" [attr.aria-label]="'siteManagement.establishmentsMap.title' | translate"></div>
+
+      <div class="est-map-controls" aria-label="Controles del mapa">
+        <button type="button" class="est-map-controls__btn" (click)="zoomIn()" [attr.aria-label]="'siteManagement.establishmentsMap.zoomIn' | translate">
+          <span class="material-icons-outlined">add</span>
+        </button>
+        <button type="button" class="est-map-controls__btn" (click)="zoomOut()" [attr.aria-label]="'siteManagement.establishmentsMap.zoomOut' | translate">
+          <span class="material-icons-outlined">remove</span>
+        </button>
+        <button type="button" class="est-map-controls__btn est-map-controls__btn--primary" (click)="recenter()" [attr.aria-label]="'siteManagement.establishmentsMap.recenter' | translate">
+          <span class="material-icons-outlined">my_location</span>
+        </button>
+      </div>
+
+      @if (selectedSite(); as site) {
+        <article class="est-map-popup">
+          <button type="button" class="est-map-popup__close" (click)="clearSelection()" [attr.aria-label]="'common.close' | translate">
+            <span class="material-icons-outlined">close</span>
+          </button>
+
+          <span class="est-map-popup__tag">{{ typeKey(site.type) | translate }}</span>
+          <h2 class="est-map-popup__title">{{ site.name }}</h2>
+
+          <p class="est-map-popup__address">
+            <span class="material-icons-outlined">place</span>
+            {{ site.address }}, {{ site.city }}
+          </p>
+
+          <dl class="est-map-popup__meta">
+            <div>
+              <dt>{{ 'siteManagement.establishmentsMap.popupStatus' | translate }}</dt>
+              <dd>
+                <span [class]="statusDotClass(site.status)"></span>
+                {{ statusKey(site.status) | translate }}
+              </dd>
+            </div>
+            <div>
+              <dt>{{ 'siteManagement.establishmentsMap.popupStaff' | translate }}</dt>
+              <dd>{{ 'siteManagement.establishmentsMap.popupStaffCount' | translate:{ count: site.staffCount } }}</dd>
+            </div>
+          </dl>
+
+          <a [routerLink]="['/obras', site.id]" class="est-map-popup__action">
+            <span class="material-icons-outlined">visibility</span>
+            {{ 'siteManagement.establishmentsMap.viewSite' | translate }}
+          </a>
+        </article>
+      }
+    </div>
+  </div>
+</section>

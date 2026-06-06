@@ -1,0 +1,132 @@
+<section class="page">
+
+  <app-page-header-card
+
+    titleKey="fleetOperations.dashboard.title"
+
+    introKey="fleetOperations.dashboard.intro"
+
+  >
+
+    <span class="worksite-badge">
+
+      <span class="material-icons-outlined">location_on</span>
+
+      {{ store.worksiteLabel }}
+
+    </span>
+
+  </app-page-header-card>
+
+
+
+  <div class="kpi-grid">
+
+    <article class="kpi-card kpi-card--teal">
+
+      <strong>{{ store.onlineNodes() }}/{{ store.iotDevices().length }}</strong>
+
+      <span>{{ 'fleetOperations.dashboard.kpiNodes' | translate }}</span>
+
+    </article>
+
+    <article class="kpi-card">
+
+      <strong>{{ store.activeTransports() }}</strong>
+
+      <span>{{ 'fleetOperations.dashboard.kpiTransports' | translate }}</span>
+
+    </article>
+
+    <article class="kpi-card kpi-card--warn">
+
+      <strong>{{ store.criticalFuelAlerts() }}</strong>
+
+      <span>{{ 'fleetOperations.dashboard.kpiFuelAlerts' | translate }}</span>
+
+    </article>
+
+    <article class="kpi-card">
+
+      <strong>{{ store.engineHoursWeek() }} h</strong>
+
+      <span>{{ 'fleetOperations.dashboard.kpiEngineHours' | translate }}</span>
+
+    </article>
+
+  </div>
+
+
+
+  <article class="it-card alert-panel">
+
+    <h3>
+
+      <span class="material-icons-outlined">warning_amber</span>
+
+      {{ 'fleetOperations.dashboard.alertsTitle' | translate }}
+
+    </h3>
+
+    <ul class="alert-list">
+
+      <li class="alert-list__item--crit">
+
+        <span class="material-icons-outlined" style="color:#dc2626">local_gas_station</span>
+
+        {{ 'fleetOperations.dashboard.alertFuel' | translate }}
+
+      </li>
+
+      <li class="alert-list__item--warn">
+
+        <span class="material-icons-outlined" style="color:#ea580c">thermostat</span>
+
+        {{ 'fleetOperations.dashboard.alertTemp' | translate }}
+
+      </li>
+
+      <li class="alert-list__item--info">
+
+        <span class="material-icons-outlined" style="color:#2d8a8a">sensors_off</span>
+
+        {{ 'fleetOperations.dashboard.alertOffline' | translate }}
+
+      </li>
+
+    </ul>
+
+  </article>
+
+
+
+  <nav class="quick-links" aria-label="Accesos rápidos">
+
+    <a routerLink="/dispositivos" class="quick-link">
+
+      <span class="quick-link__icon"><span class="material-icons-outlined">sensors</span></span>
+
+      {{ 'fleetOperations.dashboard.quickIotNodes' | translate }}
+
+    </a>
+
+    <a routerLink="/transportes" class="quick-link">
+
+      <span class="quick-link__icon"><span class="material-icons-outlined">local_shipping</span></span>
+
+      {{ 'fleetOperations.dashboard.quickTransports' | translate }}
+
+    </a>
+
+    <a routerLink="/conductores" class="quick-link">
+
+      <span class="quick-link__icon"><span class="material-icons-outlined">engineering</span></span>
+
+      {{ 'nav.drivers' | translate }}
+
+    </a>
+
+  </nav>
+
+</section>
+

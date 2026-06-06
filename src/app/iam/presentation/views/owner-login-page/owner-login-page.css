@@ -1,0 +1,16 @@
+@import '../../styles/iam-auth-form.css';
+
+:host .auth-entity-badge {
+  background-color: #1a2b4c;
+  color: #ffffff;
+}
+
+:host button.auth-submit {
+  background-color: #1a2b4c;
+  color: #ffffff;
+  border: none;
+}
+
+:host button.auth-submit:hover {
+  background-color: #243a66;
+}

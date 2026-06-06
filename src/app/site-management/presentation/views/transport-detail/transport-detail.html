@@ -1,0 +1,86 @@
+<section class="page">
+  @if (unit(); as u) {
+    <nav class="page-nav">
+      <a [routerLink]="backLink()" class="page-back">
+        <span class="material-icons-outlined">arrow_back</span>
+        <span>{{ 'siteManagement.transport.back' | translate }}</span>
+      </a>
+    </nav>
+
+    <article class="site-form-panel it-card">
+      <header class="site-form-panel__head">
+        <div class="site-form-panel__main">
+          <p class="detail-eyebrow">
+            @if (worksite(); as site) {
+              {{ site.name }}
+            } @else {
+              {{ 'siteManagement.resources.transportTitle' | translate }}
+            }
+          </p>
+          <h1 class="site-form-panel__title">{{ u.plateNumber }}</h1>
+          <p class="site-form-panel__intro">{{ u.brand }} {{ u.model }}</p>
+          <div class="detail-badges">
+            <span
+              class="status-pill"
+              [class.status-pill--active]="u.status === 'active'"
+              [class.status-pill--maintenance]="u.status === 'maintenance'"
+              [class.status-pill--inactive]="u.status === 'inactive'"
+            >
+              {{ ('siteManagement.transportStatus.' + u.status) | translate }}
+            </span>
+          </div>
+        </div>
+      </header>
+
+      <h2 class="site-detail-section-title">{{ 'siteManagement.transport.generalTitle' | translate }}</h2>
+      <div class="site-detail-fields">
+        <div class="site-detail-field">
+          <span class="site-detail-field__label">{{ 'siteManagement.transport.plate' | translate }}</span>
+          <span class="site-detail-field__value">{{ u.plateNumber }}</span>
+        </div>
+        <div class="site-detail-field">
+          <span class="site-detail-field__label">{{ 'siteManagement.list.colStatus' | translate }}</span>
+          <span class="site-detail-field__value">{{ ('siteManagement.transportStatus.' + u.status) | translate }}</span>
+        </div>
+        <div class="site-detail-field site-detail-field--full">
+          <span class="site-detail-field__label">{{ 'siteManagement.transport.model' | translate }}</span>
+          <span class="site-detail-field__value">{{ u.brand }} {{ u.model }}</span>
+        </div>
+      </div>
+
+      <h2 class="site-detail-section-title">{{ 'siteManagement.transport.telemetryTitle' | translate }}</h2>
+      <div class="site-detail-fields">
+        <div class="site-detail-field">
+          <span class="site-detail-field__label">{{ 'siteManagement.transport.iot' | translate }}</span>
+          <span class="site-detail-field__value">{{ u.iotNodeId }}</span>
+        </div>
+        <div class="site-detail-field">
+          <span class="site-detail-field__label">{{ 'siteManagement.transport.gps' | translate }}</span>
+          <span class="site-detail-field__value">{{ u.gpsLabel }}</span>
+        </div>
+      </div>
+
+      <h2 class="site-detail-section-title">{{ 'siteManagement.transport.fuelTitle' | translate }}</h2>
+      <div class="site-detail-fields">
+        <div class="site-detail-field">
+          <span class="site-detail-field__label">{{ 'siteManagement.resources.colFuel' | translate }}</span>
+          <span class="site-detail-field__value">{{ u.fuelLevelPercent }}%</span>
+          <div class="fuel-bar fuel-bar--inline">
+            <div
+              class="fuel-bar__fill"
+              [class.fuel-bar__fill--low]="u.fuelLevelPercent < 30"
+              [class.fuel-bar__fill--mid]="u.fuelLevelPercent >= 30 && u.fuelLevelPercent < 60"
+              [style.width.%]="u.fuelLevelPercent"
+            ></div>
+          </div>
+        </div>
+      </div>
+      @if (u.fuelLevelPercent < 40) {
+        <div class="it-banner it-banner--warn fuel-warn-banner">
+          <span class="material-icons-outlined">warning_amber</span>
+          {{ 'siteManagement.transport.fuelLow' | translate }}
+        </div>
+      }
+    </article>
+  }
+</section>
