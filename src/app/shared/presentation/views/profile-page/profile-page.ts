@@ -32,20 +32,6 @@ export interface ProfilePlanView {
   autoRenew: boolean;
 }
 
-const STATIC_OWNER: Omit<ProfileViewData, 'id' | 'roleKey'> = {
-  name: 'Ing. Patricia Rojas',
-  email: 'patricia.rojas@infratrack.demo',
-  createdAt: '2025-08-15T10:00:00.000Z',
-  isActive: true,
-  phone: '+51 999 200 100',
-  licenseNumber: '—',
-  operatorStatusKey: 'profile.operatorStatus.active',
-  companyName: 'Constructora InfraTrack S.A.C.',
-  assignedWorksite: '—',
-  companyCode: 'INFRA-CONSTRUCTORA-2026',
-  jobTitleKey: 'profile.role.owner',
-};
-
 @Component({
   selector: 'app-profile-page',
   standalone: true,
@@ -69,10 +55,13 @@ export class ProfilePage implements OnInit {
   });
 
   ngOnInit(): void {
+    if (this.iam.isAdmin() && !this.fleet.drivers().length) {
+      this.fleet.loadFleet();
+    }
     const userId = this.resolveUserId();
-    this.userData.set(this.buildStaticProfile(userId));
+    this.userData.set(this.buildProfile(userId));
     if (this.iam.isOwner()) {
-      this.currentPlan.set(this.buildStaticPlan());
+      this.currentPlan.set(this.buildPlan());
     }
   }
 
@@ -80,60 +69,57 @@ export class ProfilePage implements OnInit {
     void this.router.navigate(['/subscription-plans']);
   }
 
-  private buildStaticProfile(userId: number): ProfileViewData {
+  private buildProfile(userId: number): ProfileViewData {
     const session = this.iam.sessionData();
     const role = session?.role ?? 'admin';
+    const username = session?.username ?? 'usuario@infratrack.local';
 
     if (role === 'owner') {
       const draft = this.onboarding.ownerDraft();
-      if (draft) {
-        return {
-          id: session?.userId ?? userId,
-          name: draft.fullName,
-          email: draft.email,
-          roleKey: 'profile.role.owner',
-          createdAt: STATIC_OWNER.createdAt,
-          isActive: true,
-          phone: STATIC_OWNER.phone,
-          licenseNumber: '—',
-          operatorStatusKey: 'profile.operatorStatus.active',
-          companyName: draft.companyLegalName,
-          assignedWorksite: '—',
-          companyCode: this.onboarding.companyCode() ?? STATIC_OWNER.companyCode,
-          jobTitleKey: 'profile.role.owner',
-        };
-      }
       return {
         id: session?.userId ?? userId,
+        name: draft?.fullName ?? username.split('@')[0],
+        email: draft?.email ?? username,
         roleKey: 'profile.role.owner',
-        ...STATIC_OWNER,
+        createdAt: session?.loggedInAt ? new Date(session.loggedInAt).toISOString() : new Date().toISOString(),
+        isActive: true,
+        phone: '—',
+        licenseNumber: '—',
+        operatorStatusKey: 'profile.operatorStatus.active',
+        companyName: draft?.companyLegalName ?? '—',
+        assignedWorksite: '—',
+        companyCode: this.onboarding.companyCode() ?? '—',
+        jobTitleKey: 'profile.role.owner',
       };
     }
 
     const opsDraft = this.onboarding.readOpsDraft();
-    const driver = this.fleet.drivers().find((d) => d.id === userId) ?? this.fleet.drivers()[0];
+    const operator =
+      this.fleet.drivers().find((d) => d.id === userId) ??
+      this.fleet.drivers().find((d) => d.email === username) ??
+      this.fleet.drivers()[0];
 
     return {
       id: session?.userId ?? userId,
-      name: opsDraft?.fullName ?? driver?.fullName ?? session?.username ?? 'Carlos Vizcarra',
-      email: opsDraft?.email ?? driver?.email ?? 'carlos.vizcarra@infratrack.demo',
+      name: opsDraft?.fullName ?? operator?.fullName ?? username.split('@')[0],
+      email: opsDraft?.email ?? username,
       roleKey: 'profile.role.admin',
-      createdAt: '2025-03-10T08:00:00.000Z',
+      createdAt: session?.loggedInAt ? new Date(session.loggedInAt).toISOString() : new Date().toISOString(),
       isActive: true,
-      phone: driver?.phone ?? '+51 999 111 222',
-      licenseNumber: driver?.licenseNumber ?? 'Q1-2045',
+      phone: operator?.phone ?? '—',
+      licenseNumber: operator?.licenseNumber ?? '—',
       operatorStatusKey:
-        driver?.status === 'inactive'
+        operator?.status === 'inactive'
           ? 'profile.operatorStatus.inactive'
           : 'profile.operatorStatus.active',
       companyName: '—',
-      assignedWorksite: driver?.assignedWorksite ?? this.fleet.worksiteLabel,
-      companyCode: opsDraft?.companyCode ?? 'INFRA-OP-2026',
+      assignedWorksite: operator?.assignedWorksite ?? '—',
+      companyCode: opsDraft?.companyCode ?? '—',
       jobTitleKey: 'profile.role.admin',
     };
   }
 
-  private buildStaticPlan(): ProfilePlanView {
+  private buildPlan(): ProfilePlanView {
     const planId = this.onboarding.selectedPlan() ?? 'premium';
     const map: Record<SubscriptionPlanId, { nameKey: string; priceKey: string }> = {
       basic: { nameKey: 'signup.planBasicName', priceKey: 'signup.planBasicPrice' },

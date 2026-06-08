@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -13,9 +13,13 @@ import { WorksiteType } from '../../../domain/model/worksite.entity';
   templateUrl: './worksite-list.html',
   styleUrl: './worksite-list.css',
 })
-export class WorksiteList {
+export class WorksiteList implements OnInit {
   protected readonly store = inject(SiteManagementStore);
   protected readonly limits = inject(PlanLimitsService);
+
+  ngOnInit(): void {
+    this.store.loadCatalog();
+  }
 
   readonly activeCount = computed(
     () => this.store.worksites().filter((w) => w.status === 'active').length,

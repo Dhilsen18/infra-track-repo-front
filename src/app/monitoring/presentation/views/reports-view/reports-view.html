@@ -97,6 +97,10 @@
     <p class="reports-plan-hint">{{ 'planLimits.advancedReportsLocked' | translate }}</p>
   }
 
+  @if (alertsStore.loadError(); as err) {
+    <div class="reports-load-error" role="alert">{{ err | translate }}</div>
+  }
+
   <article class="it-card alerts-panel">
     <header class="alerts-panel__head">
       <div>

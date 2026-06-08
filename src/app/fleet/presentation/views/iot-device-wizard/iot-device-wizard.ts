@@ -76,21 +76,25 @@ export class IotDeviceWizard {
       return;
     }
     this.errorKey.set(null);
-    const created = this.store.addIotDevice({
-      nodeType: this.nodeType(),
-      installLocation: this.installLocation(),
-      fuelDropPercent: this.fuelDropPercent(),
-      fuelDropMinutes: this.fuelDropMinutes(),
-      maxEngineTempC: this.maxEngineTempC(),
-      serialNumber: this.serialNumber(),
-      firmwareVersion: this.firmwareVersion(),
-      batteryVoltage: this.batteryVoltage(),
-      calibrationDate: this.calibrationDate(),
-    });
-    if (!created) {
-      this.errorKey.set('planLimits.iotReached');
-      return;
-    }
-    void this.router.navigate(['/dispositivos']);
+    this.store.addIotDevice(
+      {
+        nodeType: this.nodeType(),
+        installLocation: this.installLocation(),
+        fuelDropPercent: this.fuelDropPercent(),
+        fuelDropMinutes: this.fuelDropMinutes(),
+        maxEngineTempC: this.maxEngineTempC(),
+        serialNumber: this.serialNumber(),
+        firmwareVersion: this.firmwareVersion(),
+        batteryVoltage: this.batteryVoltage(),
+        calibrationDate: this.calibrationDate(),
+      },
+      (ok) => {
+        if (!ok) {
+          this.errorKey.set(this.store.snack() ?? 'fleetOperations.iot.wizard.errorApi');
+          return;
+        }
+        void this.router.navigate(['/dispositivos']);
+      },
+    );
   }
 }

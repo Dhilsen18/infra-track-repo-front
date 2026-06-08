@@ -212,6 +212,17 @@
   line-height: 1.45;
 }
 
+.reports-load-error {
+  margin: 0 0 1rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 8px;
+  background: #fef2f2;
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  font-size: 0.8125rem;
+  color: #991b1b;
+  line-height: 1.45;
+}
+
 .alerts-panel__hint {
   margin: 0 0 0.85rem;
   padding: 0.55rem 0.75rem;

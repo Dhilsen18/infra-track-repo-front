@@ -29,7 +29,7 @@ export class OwnerPlansPage {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly drafts = inject(OnboardingDraftStore);
-  private readonly iam = inject(IamStore);
+  protected readonly iam = inject(IamStore);
 
   protected readonly isProfileContext = computed(
     () => this.route.snapshot.data['plansContext'] === 'profile',
@@ -91,6 +91,7 @@ export class OwnerPlansPage {
   ];
 
   protected readonly selectedPlan = signal<SubscriptionPlanId | null>(null);
+  protected readonly authError = signal<string | null>(null);
   protected readonly companyCode = signal<string | null>(null);
   protected readonly step = signal<'select' | 'success'>('select');
 
@@ -139,7 +140,15 @@ export class OwnerPlansPage {
       void this.router.navigate(['/iam/owner/signup']);
       return;
     }
-    this.iam.simulateLogin(draft.fullName, draft.password, 1, 'owner');
-    void this.router.navigateByUrl('/control-panel');
+    this.authError.set(null);
+    this.iam
+      .signUpThenSignIn(draft.email, draft.password, ['ROLE_OWNER'], this.router, {
+        expectedRole: 'owner',
+      })
+      .subscribe((ok) => {
+        if (!ok) {
+          this.authError.set('signup.errorAuth');
+        }
+      });
   }
 }

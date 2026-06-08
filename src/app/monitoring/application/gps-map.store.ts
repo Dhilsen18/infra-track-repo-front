@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -145,25 +145,23 @@ export class GpsMapStore {
     this.assignPendingSignal.set(true);
     this.assignErrorSignal.set(null);
     this.assignLocalNoticeSignal.set(null);
-    const body: MachineryApiDto = { ...m, operatorId };
     const url = `${INFRATRACK_API.machinery}/${machineryId}`;
-    this.http.put<MachineryApiDto>(url, body).subscribe({
-      next: (updated) => {
-        this.machinerySignal.update((list) => list.map((x) => (x.id === machineryId ? { ...x, ...updated } : x)));
-        this.assignPendingSignal.set(false);
-      },
-      error: (err: HttpErrorResponse) => {
-        this.assignPendingSignal.set(false);
-        /** MockAPI a veces solo expone GET lista sin PUT /:id → 404/405. */
-        if (err.status === 404 || err.status === 405) {
+    this.http
+      .put<MachineryApiDto>(url, {
+        operatorId,
+        currentStatus: m.currentStatus,
+      })
+      .subscribe({
+        next: (updated) => {
           this.machinerySignal.update((list) =>
-            list.map((x) => (x.id === machineryId ? { ...x, operatorId } : x)),
+            list.map((x) => (x.id === machineryId ? { ...x, ...updated } : x)),
           );
-          this.assignLocalNoticeSignal.set('telemetry.map.assignLocalOnly');
-          return;
-        }
-        this.assignErrorSignal.set('telemetry.map.assignError');
-      },
-    });
+          this.assignPendingSignal.set(false);
+        },
+        error: () => {
+          this.assignPendingSignal.set(false);
+          this.assignErrorSignal.set('telemetry.map.assignError');
+        },
+      });
   }
 }

@@ -8,19 +8,59 @@
     <div
       class="it-banner"
       [class.it-banner--success]="key.endsWith('.success')"
-      [class.it-banner--error]="key.endsWith('.errorSelection')"
+      [class.it-banner--error]="key.endsWith('.error') || key.endsWith('.errorSelection')"
     >
       <span class="material-icons-outlined">{{ key.endsWith('.success') ? 'check_circle' : 'error_outline' }}</span>
       {{ key | translate }}
     </div>
   }
 
+  <article class="it-card invite-panel">
+    <div class="invite-panel__head">
+      <span class="material-icons-outlined invite-panel__icon">person_add_alt</span>
+      <div class="invite-panel__head-text">
+        <h2>{{ 'siteManagement.assignment.inviteTitle' | translate }}</h2>
+        <p>{{ 'siteManagement.assignment.inviteIntro' | translate }}</p>
+      </div>
+      <a class="invite-panel__link" routerLink="/iam/ops/signup" target="_blank" rel="noopener">
+        <span class="material-icons-outlined">open_in_new</span>
+        {{ 'siteManagement.assignment.inviteLinkLabel' | translate }}
+      </a>
+    </div>
+    <div class="invite-panel__body">
+      <div class="invite-panel__grid">
+        <div class="invite-panel__code-card">
+          <span class="invite-panel__code-label">{{ 'siteManagement.assignment.inviteCodeLabel' | translate }}</span>
+          <strong class="invite-panel__code-value">{{ companyCode() }}</strong>
+          <p class="invite-panel__code-hint">{{ 'siteManagement.assignment.inviteCodeUniqueHint' | translate }}</p>
+        </div>
+
+        <ol class="invite-panel__steps">
+          <li>
+            <span class="invite-panel__step-num" aria-hidden="true">1</span>
+            <span>{{ 'siteManagement.assignment.inviteStep1' | translate }}</span>
+          </li>
+          <li>
+            <span class="invite-panel__step-num" aria-hidden="true">2</span>
+            <span>{{ 'siteManagement.assignment.inviteStep2' | translate }}</span>
+          </li>
+          <li>
+            <span class="invite-panel__step-num" aria-hidden="true">3</span>
+            <span>{{ 'siteManagement.assignment.inviteStep3' | translate }}</span>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </article>
+
   <div class="assignment-split">
     <article class="it-card panel">
       <h2>{{ 'siteManagement.assignment.staffPanel' | translate }}</h2>
-      <ul class="check-list">
-        @for (member of store.staff(); track member.id) {
-          @if (member.status === 'active') {
+      @if (activeStaff().length === 0) {
+        <p class="staff-empty">{{ 'siteManagement.assignment.staffEmpty' | translate }}</p>
+      } @else {
+        <ul class="check-list">
+          @for (member of activeStaff(); track member.id) {
             <li>
               <mat-checkbox
                 [checked]="isSelected(member.id)"
@@ -33,8 +73,8 @@
               </mat-checkbox>
             </li>
           }
-        }
-      </ul>
+        </ul>
+      }
     </article>
 
     <article class="it-card panel">

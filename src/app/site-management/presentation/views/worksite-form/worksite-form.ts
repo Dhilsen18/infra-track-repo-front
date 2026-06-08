@@ -34,22 +34,20 @@ export class WorksiteForm {
     const lat = this.latitude().trim() ? Number(this.latitude()) : undefined;
     const lng = this.longitude().trim() ? Number(this.longitude()) : undefined;
 
-    const site = this.store.addWorksite({
-      name: this.name(),
-      city: this.city(),
-      type: this.type(),
-      address: this.address(),
-      leadEngineer: this.leadEngineer(),
-      latitude: Number.isFinite(lat) ? lat : undefined,
-      longitude: Number.isFinite(lng) ? lng : undefined,
-    });
-
-    if (!site) {
-      this.errorKey.set('planLimits.worksiteReached');
-      return;
-    }
-
     this.errorKey.set(null);
-    void this.router.navigate(['/obras/mapa'], { queryParams: { highlight: site.id } });
+    this.store.addWorksite(
+      {
+        name: this.name(),
+        city: this.city(),
+        type: this.type(),
+        address: this.address(),
+        leadEngineer: this.leadEngineer(),
+        latitude: Number.isFinite(lat) ? lat : undefined,
+        longitude: Number.isFinite(lng) ? lng : undefined,
+      },
+      (site) => {
+        void this.router.navigate(['/obras/mapa'], { queryParams: { highlight: site.id } });
+      },
+    );
   }
 }

@@ -16,6 +16,13 @@
     }
   </app-page-header-card>
 
+  @if (store.loadError(); as err) {
+    <div class="it-banner it-banner--error" role="alert">
+      <span class="material-icons-outlined">error_outline</span>
+      {{ err | translate }}
+    </div>
+  }
+
   @if (!limits.canAddTransport(store.transports().length)) {
     <div class="it-banner it-banner--warn" role="status">
       <span class="material-icons-outlined">info</span>

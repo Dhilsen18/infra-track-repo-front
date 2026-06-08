@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { IamStore } from '../../../application/iam.store';
+import { SignInCommand } from '../../../domain/model/sign-in.command';
 import { AuthSplitShell } from '../../components/auth-split-shell/auth-split-shell';
 
 @Component({
@@ -13,13 +14,14 @@ import { AuthSplitShell } from '../../components/auth-split-shell/auth-split-she
   styleUrl: './ops-login-page.css',
 })
 export class OpsLoginPage {
-  private readonly store = inject(IamStore);
+  protected readonly store = inject(IamStore);
   private readonly router = inject(Router);
 
   protected readonly email = signal('');
   protected readonly password = signal('');
   protected readonly companyCode = signal('');
   protected readonly hidePassword = signal(true);
+  protected readonly errorMessage = signal<string | null>(null);
 
   back(): void {
     void this.router.navigate(['/iam/sign-in']);
@@ -30,8 +32,17 @@ export class OpsLoginPage {
   }
 
   submit(): void {
-    const mail = this.email().trim() || 'ops@infratrack.demo';
-    this.store.simulateLogin(mail, this.password(), 2, 'admin');
-    void this.router.navigateByUrl('/operacion');
+    const mail = this.email().trim();
+    const password = this.password();
+    if (!mail || !password) {
+      this.errorMessage.set('signup.errorRequired');
+      return;
+    }
+    this.errorMessage.set(null);
+    this.store.signIn(new SignInCommand({ username: mail, password }), this.router, {
+      expectedRole: 'admin',
+      onError: (reason) =>
+        this.errorMessage.set(reason === 'wrongEntity' ? 'login.errorWrongEntity' : 'login.errorAuth'),
+    });
   }
 }

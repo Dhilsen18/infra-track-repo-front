@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { map } from 'rxjs';
@@ -21,6 +21,18 @@ export class WorksiteResources {
     this.route.paramMap.pipe(map((p) => Number(p.get('worksiteId')))),
     { initialValue: 0 },
   );
+
+  constructor() {
+    if (!this.store.worksites().length) {
+      this.store.loadCatalog();
+    }
+    effect(() => {
+      const id = this.worksiteId();
+      if (id) {
+        this.store.loadTransportsForWorksite(id);
+      }
+    });
+  }
 
   protected worksite() {
     const id = this.worksiteId();

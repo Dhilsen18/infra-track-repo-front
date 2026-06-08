@@ -14,10 +14,10 @@
     </button>
   </app-page-header-card>
 
-  @if (store.loadError()) {
+  @if (store.loadError(); as err) {
     <div class="cp-banner cp-banner--error" role="alert">
       <span class="material-icons-outlined">error_outline</span>
-      {{ store.loadError() }}
+      {{ err | translate }}
     </div>
   }
 
@@ -107,8 +107,8 @@
           <p class="cp-card-hint">{{ 'controlPanel.alerts.subtitle' | translate }}</p>
         </div>
       </div>
-      @if (store.acknowledgeError()) {
-        <div class="cp-banner cp-banner--warn">{{ store.acknowledgeError() }}</div>
+      @if (store.acknowledgeError(); as ackErr) {
+        <div class="cp-banner cp-banner--warn">{{ ackErr | translate }}</div>
       }
       @if (store.alerts().length === 0) {
         <p class="cp-empty">{{ 'controlPanel.alerts.empty' | translate }}</p>

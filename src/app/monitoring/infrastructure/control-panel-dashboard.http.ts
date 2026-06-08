@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { forkJoin, Observable } from 'rxjs';
 
 import {
   AlertApiDto,
@@ -8,7 +9,7 @@ import {
   MaintenanceRecordApiDto,
   TelemetryDataApiDto,
 } from '../../shared/infrastructure/infratrack-api.contracts';
-import { CONTROL_PANEL_DEMO_PAYLOAD } from './control-panel-demo.data';
+import { INFRATRACK_API } from '../../shared/infrastructure/infratrack-api.urls';
 
 export interface ControlPanelDashboardPayload {
   alerts: AlertApiDto[];
@@ -18,13 +19,38 @@ export interface ControlPanelDashboardPayload {
   iotNodes: IotNodeApiDto[];
 }
 
+export interface CreateAlertBody {
+  machineryId: number;
+  type: string;
+  severity: string;
+  description: string;
+  isAcknowledged: boolean;
+  timestamp: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ControlPanelDashboardHttp {
+  private readonly http = inject(HttpClient);
+
   loadDashboard$(): Observable<ControlPanelDashboardPayload> {
-    return of(CONTROL_PANEL_DEMO_PAYLOAD);
+    return forkJoin({
+      alerts: this.http.get<AlertApiDto[]>(INFRATRACK_API.alerts),
+      machinery: this.http.get<MachineryApiDto[]>(INFRATRACK_API.machinery),
+      telemetryData: this.http.get<TelemetryDataApiDto[]>(INFRATRACK_API.telemetryData),
+      maintenanceRecords: this.http.get<MaintenanceRecordApiDto[]>(INFRATRACK_API.maintenanceRecords),
+      iotNodes: this.http.get<IotNodeApiDto[]>(INFRATRACK_API.iotNodes),
+    });
   }
 
-  acknowledgeAlert$(alert: AlertApiDto): Observable<AlertApiDto> {
-    return of({ ...alert, isAcknowledged: true });
+  listAlerts$(): Observable<AlertApiDto[]> {
+    return this.http.get<AlertApiDto[]>(INFRATRACK_API.alerts);
+  }
+
+  acknowledgeAlert$(alertId: number): Observable<unknown> {
+    return this.http.post(`${INFRATRACK_API.alerts}/${alertId}/acknowledgements`, null);
+  }
+
+  createAlert$(body: CreateAlertBody): Observable<AlertApiDto> {
+    return this.http.post<AlertApiDto>(INFRATRACK_API.alerts, body);
   }
 }

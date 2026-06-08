@@ -86,6 +86,9 @@ export class EstablishmentsMapView {
   private markerById = new Map<number, L.CircleMarker>();
 
   constructor() {
+    if (!this.store.worksites().length) {
+      this.store.loadCatalog();
+    }
     const highlight = this.route.snapshot.queryParamMap.get('highlight');
     if (highlight) {
       const id = Number(highlight);

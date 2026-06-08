@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { IamStore } from '../../../application/iam.store';
+import { OpsOnboardingService } from '../../../application/ops-onboarding.service';
 import { OnboardingDraftStore } from '../../../application/onboarding-draft.store';
 import { AuthSplitShell } from '../../components/auth-split-shell/auth-split-shell';
 
@@ -16,7 +17,10 @@ import { AuthSplitShell } from '../../components/auth-split-shell/auth-split-she
 export class OpsSignupPage {
   private readonly router = inject(Router);
   private readonly drafts = inject(OnboardingDraftStore);
-  private readonly iam = inject(IamStore);
+  private readonly opsOnboarding = inject(OpsOnboardingService);
+  protected readonly iam = inject(IamStore);
+
+  private static readonly COMPANY_CODE_PATTERN = /^INFRA-[A-Z0-9-]+$/;
 
   protected readonly fullName = signal('');
   protected readonly email = signal('');
@@ -44,14 +48,28 @@ export class OpsSignupPage {
       return;
     }
 
-    if (password.length < 6) {
+    if (password.length < 8) {
       this.errorMessage.set('signup.errorPasswordLength');
+      return;
+    }
+
+    if (!OpsSignupPage.COMPANY_CODE_PATTERN.test(companyCode)) {
+      this.errorMessage.set('signup.errorInvalidCompanyCode');
       return;
     }
 
     this.errorMessage.set(null);
     this.drafts.saveOpsDraft({ fullName, email, password, companyCode });
-    this.iam.simulateLogin(fullName, password, 2, 'admin');
-    void this.router.navigateByUrl('/operacion');
+    this.iam
+      .signUpThenSignIn(email, password, ['ROLE_ADMIN'], this.router, {
+        expectedRole: 'admin',
+        afterAuth: (resource) =>
+          this.opsOnboarding.provisionStaff(resource, { fullName, email }),
+      })
+      .subscribe((ok) => {
+        if (!ok) {
+          this.errorMessage.set('signup.errorProvision');
+        }
+      });
   }
 }

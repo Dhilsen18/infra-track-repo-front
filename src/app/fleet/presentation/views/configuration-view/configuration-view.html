@@ -22,6 +22,13 @@
     </div>
   </header>
 
+  @if (store.apiError(); as err) {
+    <div class="cfg-banner cfg-banner--error" role="alert">
+      <mat-icon>error_outline</mat-icon>
+      {{ err | translate }}
+    </div>
+  }
+
   <div class="cfg-page__grid">
     <mat-card class="cfg-card cfg-card--fleet">
       <mat-card-header class="cfg-card__head">

@@ -10,7 +10,7 @@
     "configuration": "Configuration & Support",
     "profile": "Account",
     "worksites": "Job sites / branches",
-    "assignStaff": "Assign logistics staff",
+    "assignStaff": "Add / assign staff",
     "newWorksite": "New job site",
     "establishmentsMap": "Map of establishments",
     "opsDashboard": "Operations dashboard",
@@ -47,7 +47,7 @@
     "entityAdminBadge": "Operational staff",
     "emailPlaceholder": "Enter your email",
     "passwordPlaceholder": "Enter your password",
-    "companyCodePlaceholder": "INFRA-EMPRESA-2026",
+    "companyCodePlaceholder": "INFRA-EMPRESA-2026-X7K2",
     "email": "Email",
     "password": "Password",
     "companyCode": "Company code",
@@ -55,7 +55,9 @@
     "noAccount": "Don't have an account yet?",
     "registerLink": "Register here",
     "noAccountOps": "New to the fleet?",
-    "opsRegisterLink": "Register with company code"
+    "opsRegisterLink": "Register with company code",
+    "errorAuth": "Invalid credentials or the server did not respond. Check your username and password.",
+    "errorWrongEntity": "This account does not match this entity type. Use the correct sign-in (company owner or operations)."
   },
   "signup": {
     "ownerHeroEyebrow": "Entity registration",
@@ -77,7 +79,7 @@
     "fullName": "Full name",
     "companyLegalName": "Legal name / entity name",
     "companyLegalNameHint": "Official name of the construction or hardware business.",
-    "passwordHint": "Minimum 6 characters (frontend only for now).",
+    "passwordHint": "Minimum 8 characters (server requirement).",
     "companyCodeHint": "Code provided by the owner after company registration.",
     "opsCodeNote": "No plan selection needed — only your company's code.",
     "continueToPlans": "Continue to plans",
@@ -88,7 +90,10 @@
     "alreadyHaveAccount": "Already have an account?",
     "signInLink": "Sign in",
     "errorRequired": "Please complete all required fields.",
-    "errorPasswordLength": "Password must be at least 6 characters.",
+    "errorPasswordLength": "Password must be at least 8 characters.",
+    "errorAuth": "Could not create the account or sign in. Check your details or use another email.",
+    "errorInvalidCompanyCode": "Code must match INFRA-COMPANY-2026 format (from the owner).",
+    "errorProvision": "Account was created but staff registration failed. Restart the backend and try again.",
     "plansTitle": "Choose a plan",
     "plansSubtitle": "Choose which modules and capacity your company gets when you enter the dashboard.",
     "registeredEntity": "Registered entity",
@@ -175,7 +180,8 @@
       "viewDetail": "View detail",
       "summaryTotal": "Registered sites",
       "summaryActive": "Active sites",
-      "summaryTransports": "Assigned transports"
+      "summaryTransports": "Assigned transports",
+      "loadError": "Could not load job sites from the server. Is the backend running?"
     },
     "establishmentsMap": {
       "back": "Back to job sites list",
@@ -227,7 +233,8 @@
       "colLicense": "License",
       "colVehicle": "Vehicle",
       "colUnit": "Unit",
-      "colFuel": "Fuel"
+      "colFuel": "Fuel",
+      "loadError": "Could not load site resources from the server."
     },
     "form": {
       "title": "Add job site",
@@ -238,7 +245,8 @@
       "longitude": "Longitude",
       "coordsHint": "Optional: enter latitude and longitude to place the site on the establishments map.",
       "submit": "Save site",
-      "success": "Site saved successfully."
+      "success": "Site saved successfully.",
+      "error": "Could not save the site on the server."
     },
     "assignment": {
       "title": "Assign logistics staff",
@@ -249,7 +257,17 @@
       "selectWorksite": "Job site",
       "confirm": "Confirm assignment",
       "success": "Staff assigned to the site successfully.",
-      "errorSelection": "Select at least one administrator and an active site."
+      "errorSelection": "Select at least one administrator and an active site.",
+      "error": "Could not assign staff on the server.",
+      "inviteTitle": "Add logistics staff",
+      "inviteIntro": "Operations staff register using the company code you received when choosing your plan.",
+      "inviteCodeLabel": "Company code",
+      "inviteCodeUniqueHint": "Unique to your company. Includes a random suffix so it won't repeat.",
+      "inviteStep1": "Share this code with your logistics team.",
+      "inviteStep2": "They register using the ops signup link.",
+      "inviteStep3": "Return here to assign them to a job site.",
+      "inviteLinkLabel": "Open operations registration",
+      "staffEmpty": "No staff registered yet. Share the code and registration link with your team."
     },
     "staffDetail": {
       "intro": "Operator information and field performance.",
@@ -277,6 +295,7 @@
     }
   },
   "fleetOperations": {
+    "loadError": "Could not load fleet data from the server. Is the backend running?",
     "dashboard": {
       "title": "Operations dashboard",
       "intro": "Telemetry and alerts for your assigned job site.",
@@ -345,8 +364,10 @@
         "paramsHint": "Recommended parameters for the node type are pre-selected; enable others if you want to monitor them.",
         "paramsTitle": "Monitoring parameters",
         "submit": "Confirm",
-        "success": "IoT device registered (saved locally).",
-        "errorRequired": "Enter location, serial number and firmware version."
+        "success": "IoT device registered on the server.",
+        "errorRequired": "Enter location, serial number and firmware version.",
+        "errorApi": "Could not register the device on the server.",
+        "errorNoMachinery": "No machinery without an IoT node. Register a transport first."
       },
       "detail": {
         "back": "Back to devices",
@@ -410,8 +431,10 @@
         "paramsTitle": "Monitoring parameters",
         "back": "Back",
         "submit": "Confirm",
-        "success": "Transport registered (saved locally).",
-        "errorRequired": "Enter plate, brand and model."
+        "success": "Transport registered on the server.",
+        "errorRequired": "Enter plate, brand and model.",
+        "errorApi": "Could not register the transport on the server.",
+        "errorNoOperator": "No operators in the database. The backend must have at least one."
       },
       "detail": {
         "back": "Back to transports",
@@ -583,7 +606,7 @@
     "load": {
       "loading": "Loading fleet data…",
       "error": "Could not load dashboard data.",
-      "empty": "No demo data available to display.",
+      "empty": "No fleet data available to display.",
       "retry": "Reload data"
     },
     "kpis": {
@@ -797,7 +820,7 @@
     "alertsCenter": {
       "title": "Alert center",
       "intro": "Demo fleet alerts. Filter by severity, type and acknowledgment.",
-      "loadError": "Could not load demo alerts.",
+      "loadError": "Could not load alerts from the server.",
       "ownerHint": "As an owner you only see alerts with critical severity.",
       "filterSeverity": "Severity",
       "filterType": "Type",
@@ -847,9 +870,10 @@
   },
   "configuration": {
     "title": "Configuration & Support",
-    "intro": "Review fleet status, manage IoT nodes (admins), and check subscriptions. Demo data in this browser only.",
+    "intro": "Review fleet status, manage IoT nodes (admins), and check subscriptions from the API.",
+    "loadError": "Could not load configuration data from the server.",
     "actions": {
-      "refreshApi": "Reload demo",
+      "refreshApi": "Reload data",
       "addIotNode": "Add IoT node",
       "addMaintenance": "Add maintenance record"
     },
@@ -859,12 +883,12 @@
       "subscriptionsSection": "Subscriptions"
     },
     "accountCardSubtitle": "Profile, role, and session",
-    "fleetCardSubtitle": "Figures from your company demo fleet",
+    "fleetCardSubtitle": "Figures from your fleet registered on the server",
     "subsCardSubtitle": "Recorded subscription plans",
     "accountTeaser": "Open your profile to see role, contact data, linked operator, and sign out.",
     "accountLink": "Go to my account",
     "api": {
-      "empty": "No demo data to display.",
+      "empty": "No fleet data to display.",
       "machineryTotal": "Machinery (total)",
       "machineryActive": "Active units",
       "machineryMaint": "In maintenance",

@@ -17,6 +17,7 @@ export class IotDeviceList implements OnInit {
   protected readonly limits = inject(PlanLimitsService);
 
   ngOnInit(): void {
+    this.store.loadFleet();
     if (this.store.snack()) {
       setTimeout(() => this.store.clearSnack(), 4000);
     }

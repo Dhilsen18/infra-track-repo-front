@@ -22,6 +22,10 @@
         <p>{{ 'login.opsLoginSubtitle' | translate }}</p>
       </header>
 
+      @if (errorMessage(); as err) {
+        <p class="auth-error" role="alert">{{ err | translate }}</p>
+      }
+
       <form class="auth-form" (ngSubmit)="submit()">
         <div class="auth-field-group">
           <label class="auth-label" for="ops-email">{{ 'login.email' | translate }}</label>
@@ -71,7 +75,12 @@
           />
         </div>
 
-        <button class="auth-submit" type="submit">
+        <button
+          class="auth-submit"
+          [class.auth-submit--loading]="store.authBusy()"
+          type="submit"
+          [disabled]="store.authBusy()"
+        >
           {{ 'login.submit' | translate }}
         </button>
       </form>

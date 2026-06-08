@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { afterNextRender, Component, DestroyRef, ElementRef, inject, viewChild } from '@angular/core';
+import { afterNextRender, Component, DestroyRef, ElementRef, inject, OnInit, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
@@ -40,7 +40,7 @@ Chart.register(...registerables);
   templateUrl: './reports-view.html',
   styleUrl: './reports-view.css',
 })
-export class ReportsView {
+export class ReportsView implements OnInit {
   private readonly translate = inject(TranslateService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly snack = inject(MatSnackBar);
@@ -74,6 +74,10 @@ export class ReportsView {
     { value: 'ex', labelKey: 'reports.filters.optExcavators' },
     { value: 'ld', labelKey: 'reports.filters.optLoaders' },
   ] as const;
+
+  ngOnInit(): void {
+    this.alertsStore.load().pipe(take(1)).subscribe();
+  }
 
   constructor() {
     this.destroyRef.onDestroy(() => {

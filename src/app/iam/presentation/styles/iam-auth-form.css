@@ -160,9 +160,10 @@
 }
 
 .auth-field-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.32rem;
+  display: grid;
+  grid-template-rows: auto 42px auto;
+  gap: 0.32rem 0;
+  align-items: start;
   min-width: 0;
 }
 
@@ -171,6 +172,9 @@
 }
 
 .auth-label {
+  min-height: 2.6em;
+  display: flex;
+  align-items: flex-end;
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -293,8 +297,33 @@ button.auth-submit:focus-visible {
 }
 
 button.auth-submit:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
+  opacity: 0.72;
+  cursor: wait;
+}
+
+button.auth-submit.auth-submit--loading {
+  position: relative;
+  color: transparent;
+  pointer-events: none;
+}
+
+button.auth-submit.auth-submit--loading::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 1.15rem;
+  height: 1.15rem;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: auth-submit-spin 0.65s linear infinite;
+}
+
+@keyframes auth-submit-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .auth-footer-link {

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { map } from 'rxjs';
@@ -61,9 +61,15 @@ const DEMO_READINGS: Record<number, SensorReading[]> = {
   templateUrl: './iot-device-detail.html',
   styleUrl: './iot-device-detail.css',
 })
-export class IotDeviceDetail {
+export class IotDeviceDetail implements OnInit {
   private readonly route = inject(ActivatedRoute);
   protected readonly store = inject(FleetStore);
+
+  ngOnInit(): void {
+    if (!this.store.iotDevices().length) {
+      this.store.loadFleet();
+    }
+  }
 
   private readonly deviceId = toSignal(
     this.route.paramMap.pipe(map((p) => Number(p.get('deviceId')))),

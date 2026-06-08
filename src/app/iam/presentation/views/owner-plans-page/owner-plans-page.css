@@ -322,6 +322,35 @@
   background: #243a66;
 }
 
+.plans-dashboard-cta:disabled {
+  opacity: 0.72;
+  cursor: wait;
+}
+
+.plans-dashboard-cta--loading {
+  position: relative;
+  color: transparent;
+}
+
+.plans-dashboard-cta--loading::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 1.15rem;
+  height: 1.15rem;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: plans-cta-spin 0.65s linear infinite;
+}
+
+@keyframes plans-cta-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @media (max-width: 960px) {
   .plans-grid {
     grid-template-columns: 1fr;

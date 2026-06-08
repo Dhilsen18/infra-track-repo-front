@@ -10,7 +10,7 @@
     "configuration": "Configuración y soporte",
     "profile": "Cuenta",
     "worksites": "Zonas de obra / sedes",
-    "assignStaff": "Asignar personal logístico",
+    "assignStaff": "Agregar / asignar personal",
     "newWorksite": "Nueva zona de obra",
     "establishmentsMap": "Mapa de sedes",
     "opsDashboard": "Dashboard de operación",
@@ -47,7 +47,7 @@
     "entityAdminBadge": "Personal operativo",
     "emailPlaceholder": "Ingresa tu correo",
     "passwordPlaceholder": "Ingresa tu contraseña",
-    "companyCodePlaceholder": "INFRA-EMPRESA-2026",
+    "companyCodePlaceholder": "INFRA-EMPRESA-2026-X7K2",
     "email": "Correo electrónico",
     "password": "Contraseña",
     "companyCode": "Código de empresa",
@@ -55,7 +55,9 @@
     "noAccount": "¿Aún no tienes cuenta?",
     "registerLink": "Regístrate aquí",
     "noAccountOps": "¿Eres nuevo en la flota?",
-    "opsRegisterLink": "Registro con código de empresa"
+    "opsRegisterLink": "Registro con código de empresa",
+    "errorAuth": "Credenciales incorrectas o el servidor no respondió. Verifica usuario y contraseña.",
+    "errorWrongEntity": "Esta cuenta no corresponde a este tipo de entidad. Usa el acceso correcto (constructora u operativo)."
   },
   "signup": {
     "ownerHeroEyebrow": "Registro de entidad",
@@ -77,7 +79,7 @@
     "fullName": "Nombre completo",
     "companyLegalName": "Razón social / nombre de la entidad",
     "companyLegalNameHint": "Nombre legal de la constructora o ferretería.",
-    "passwordHint": "Mínimo 6 caracteres (solo frontend por ahora).",
+    "passwordHint": "Mínimo 8 caracteres (requisito del servidor).",
     "companyCodeHint": "Código entregado por el dueño tras registrar la empresa.",
     "opsCodeNote": "No necesitas elegir plan: solo el código de empresa de tu constructora.",
     "continueToPlans": "Continuar a planes",
@@ -88,7 +90,10 @@
     "alreadyHaveAccount": "¿Ya tienes cuenta?",
     "signInLink": "Inicia sesión",
     "errorRequired": "Completa todos los campos obligatorios.",
-    "errorPasswordLength": "La contraseña debe tener al menos 6 caracteres.",
+    "errorPasswordLength": "La contraseña debe tener al menos 8 caracteres.",
+    "errorAuth": "No se pudo crear la cuenta o iniciar sesión. Revisa los datos o usa otro correo.",
+    "errorInvalidCompanyCode": "El código debe tener el formato INFRA-EMPRESA-2026 (copiado del dueño).",
+    "errorProvision": "La cuenta se creó pero no se registró en el personal. Reinicia el backend y vuelve a intentar.",
     "plansTitle": "Elige un plan",
     "plansSubtitle": "Define qué módulos y capacidad tendrá tu constructora al ingresar al panel.",
     "registeredEntity": "Entidad registrada",
@@ -175,7 +180,8 @@
       "viewDetail": "Ver detalle",
       "summaryTotal": "Obras registradas",
       "summaryActive": "Obras activas",
-      "summaryTransports": "Transportes asignados"
+      "summaryTransports": "Transportes asignados",
+      "loadError": "No se pudieron cargar las obras desde el servidor. ¿Está el backend en marcha?"
     },
     "establishmentsMap": {
       "back": "Volver al listado de obras",
@@ -227,7 +233,8 @@
       "colLicense": "Licencia",
       "colVehicle": "Vehículo",
       "colUnit": "Unidad",
-      "colFuel": "Combustible"
+      "colFuel": "Combustible",
+      "loadError": "No se pudieron cargar los recursos de la obra desde el servidor."
     },
     "form": {
       "title": "Agregar zona de obra",
@@ -238,7 +245,8 @@
       "longitude": "Longitud",
       "coordsHint": "Opcional: ingresa latitud y longitud para ubicar la sede en Mapa de sedes.",
       "submit": "Guardar obra",
-      "success": "Obra registrada correctamente."
+      "success": "Obra registrada correctamente.",
+      "error": "No se pudo guardar la obra en el servidor."
     },
     "assignment": {
       "title": "Asignar personal logístico",
@@ -249,7 +257,17 @@
       "selectWorksite": "Zona de obra",
       "confirm": "Confirmar asignación",
       "success": "Personal asignado a la obra correctamente.",
-      "errorSelection": "Selecciona al menos un administrador y una obra activa."
+      "errorSelection": "Selecciona al menos un administrador y una obra activa.",
+      "error": "No se pudo asignar el personal en el servidor.",
+      "inviteTitle": "Agregar personal logístico",
+      "inviteIntro": "El personal operativo se registra con el código de empresa que generaste al elegir tu plan.",
+      "inviteCodeLabel": "Código de empresa",
+      "inviteCodeUniqueHint": "Único para tu empresa. Incluye un sufijo aleatorio para que no se repita.",
+      "inviteStep1": "Comparte este código con tu equipo logístico.",
+      "inviteStep2": "Ellos se registran con el enlace de registro operativo.",
+      "inviteStep3": "Vuelve aquí para asignarlos a una obra.",
+      "inviteLinkLabel": "Abrir registro operativo",
+      "staffEmpty": "Aún no hay personal registrado. Comparte el código y el enlace de registro con tu equipo."
     },
     "staffDetail": {
       "intro": "Información del operador y desempeño en campo.",
@@ -277,6 +295,7 @@
     }
   },
   "fleetOperations": {
+    "loadError": "No se pudo cargar la flota desde el servidor. ¿Está el backend en marcha?",
     "dashboard": {
       "title": "Dashboard de operación",
       "intro": "Telemetría y alertas de tu obra asignada.",
@@ -345,8 +364,10 @@
         "paramsHint": "Los parámetros recomendados para el tipo de nodo vienen marcados; activa otros si deseas medirlos.",
         "paramsTitle": "Parámetros de monitoreo",
         "submit": "Confirmar",
-        "success": "Dispositivo IoT registrado (guardado localmente).",
-        "errorRequired": "Completa ubicación, número de serie y versión de firmware."
+        "success": "Dispositivo IoT registrado en el servidor.",
+        "errorRequired": "Completa ubicación, número de serie y versión de firmware.",
+        "errorApi": "No se pudo registrar el dispositivo en el servidor.",
+        "errorNoMachinery": "No hay maquinaria sin nodo IoT. Registra un transporte primero."
       },
       "detail": {
         "back": "Volver a dispositivos",
@@ -410,8 +431,10 @@
         "paramsTitle": "Parámetros de monitoreo",
         "back": "Volver",
         "submit": "Confirmar",
-        "success": "Transporte registrado (guardado localmente).",
-        "errorRequired": "Completa placa, marca y modelo."
+        "success": "Transporte registrado en el servidor.",
+        "errorRequired": "Completa placa, marca y modelo.",
+        "errorApi": "No se pudo registrar el transporte en el servidor.",
+        "errorNoOperator": "No hay operadores en la base de datos. El backend debe tener al menos uno."
       },
       "detail": {
         "back": "Volver a transportes",
@@ -583,7 +606,7 @@
     "load": {
       "loading": "Cargando datos de la flota…",
       "error": "No se pudieron cargar los datos del panel.",
-      "empty": "No hay datos de demostración para mostrar.",
+      "empty": "No hay datos de flota para mostrar.",
       "retry": "Recargar datos"
     },
     "kpis": {
@@ -797,7 +820,7 @@
     "alertsCenter": {
       "title": "Centro de alertas",
       "intro": "Alertas de la flota demo. Filtra por gravedad, tipo y reconocimiento.",
-      "loadError": "No se pudieron cargar las alertas de demostración.",
+      "loadError": "No se pudieron cargar las alertas desde el servidor.",
       "ownerHint": "Como propietario solo ves alertas con gravedad crítica.",
       "filterSeverity": "Gravedad",
       "filterType": "Tipo",
@@ -847,9 +870,10 @@
   },
   "configuration": {
     "title": "Configuración y soporte",
-    "intro": "Consulta el estado de la flota, gestiona nodos IoT (administradores) y revisa suscripciones. Datos de demostración en este navegador.",
+    "intro": "Consulta el estado de la flota, gestiona nodos IoT (administradores) y revisa suscripciones desde la API.",
+    "loadError": "No se pudieron cargar los datos de configuración desde el servidor.",
     "actions": {
-      "refreshApi": "Recargar demo",
+      "refreshApi": "Recargar datos",
       "addIotNode": "Añadir nodo IoT",
       "addMaintenance": "Añadir mantenimiento"
     },
@@ -859,12 +883,12 @@
       "subscriptionsSection": "Suscripciones"
     },
     "accountCardSubtitle": "Perfil, rol y sesión",
-    "fleetCardSubtitle": "Indicadores calculados con la flota demo de tu constructora",
+    "fleetCardSubtitle": "Indicadores calculados con la flota registrada en el servidor",
     "subsCardSubtitle": "Planes activos o históricos registrados",
     "accountTeaser": "Abre tu perfil para ver rol, datos de contacto, operador enlazado y cerrar sesión.",
     "accountLink": "Ir a mi cuenta",
     "api": {
-      "empty": "No hay datos de demostración para mostrar.",
+      "empty": "No hay datos de flota para mostrar.",
       "machineryTotal": "Maquinaria (total)",
       "machineryActive": "Unidades activas",
       "machineryMaint": "En mantenimiento",

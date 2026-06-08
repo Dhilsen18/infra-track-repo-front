@@ -78,21 +78,25 @@ export class TransportWizard {
       return;
     }
     this.errorKey.set(null);
-    const created = this.store.addTransport({
-      unitType: this.unitType(),
-      tankCapacityLiters: this.tankCapacityLiters(),
-      consumptionPerHour: this.consumptionPerHour(),
-      fuelType: this.fuelType(),
-      plate: this.plate(),
-      brand: this.brand(),
-      model: this.model(),
-      iotNodeSerial: this.iotNodeSerial(),
-      imageUrl: null,
-    });
-    if (!created) {
-      this.errorKey.set('planLimits.transportReached');
-      return;
-    }
-    void this.router.navigate(['/transportes']);
+    this.store.addTransport(
+      {
+        unitType: this.unitType(),
+        tankCapacityLiters: this.tankCapacityLiters(),
+        consumptionPerHour: this.consumptionPerHour(),
+        fuelType: this.fuelType(),
+        plate: this.plate(),
+        brand: this.brand(),
+        model: this.model(),
+        iotNodeSerial: this.iotNodeSerial(),
+        imageUrl: null,
+      },
+      (ok) => {
+        if (!ok) {
+          this.errorKey.set(this.store.snack() ?? 'fleetOperations.transport.wizard.errorApi');
+          return;
+        }
+        void this.router.navigate(['/transportes']);
+      },
+    );
   }
 }

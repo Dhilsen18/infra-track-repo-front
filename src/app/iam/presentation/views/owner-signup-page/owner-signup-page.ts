@@ -22,6 +22,7 @@ export class OwnerSignupPage {
   protected readonly companyLegalName = signal('');
   protected readonly errorMessage = signal<string | null>(null);
   protected readonly hidePassword = signal(true);
+  protected readonly submitting = signal(false);
 
   back(): void {
     void this.router.navigate(['/iam/owner/login']);
@@ -42,13 +43,14 @@ export class OwnerSignupPage {
       return;
     }
 
-    if (password.length < 6) {
+    if (password.length < 8) {
       this.errorMessage.set('signup.errorPasswordLength');
       return;
     }
 
     this.errorMessage.set(null);
+    this.submitting.set(true);
     this.drafts.saveOwnerDraft({ fullName, email, password, companyLegalName });
-    void this.router.navigate(['/iam/owner/plans']);
+    void this.router.navigate(['/iam/owner/plans']).then(() => this.submitting.set(false));
   }
 }

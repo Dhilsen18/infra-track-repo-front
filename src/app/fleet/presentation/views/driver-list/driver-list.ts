@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -11,8 +11,12 @@ import { FleetStore } from '../../../application/fleet.store';
   templateUrl: './driver-list.html',
   styleUrl: './driver-list.css',
 })
-export class DriverList {
+export class DriverList implements OnInit {
   protected readonly store = inject(FleetStore);
+
+  ngOnInit(): void {
+    this.store.loadFleet();
+  }
 
   statusKey(status: string): string {
     return `fleetOperations.driver.status.${status}`;

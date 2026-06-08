@@ -69,17 +69,29 @@ export class OnboardingDraftStore {
   }
 
   generateAndSaveCompanyCode(companyLegalName: string): string {
+    const existing = this.readCompanyCode();
+    if (existing) {
+      this.companyCodeSignal.set(existing);
+      return existing;
+    }
+
     const slug = companyLegalName
       .trim()
       .toUpperCase()
       .replace(/[^A-Z0-9]+/g, '-')
       .replace(/^-|-$/g, '')
-      .slice(0, 24);
+      .slice(0, 20);
     const year = new Date().getFullYear();
-    const code = `INFRA-${slug || 'EMPRESA'}-${year}`;
+    const code = `INFRA-${slug || 'EMPRESA'}-${year}-${this.randomCodeSuffix()}`;
     sessionStorage.setItem(COMPANY_CODE_KEY, code);
     this.companyCodeSignal.set(code);
     return code;
+  }
+
+  private randomCodeSuffix(): string {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    const random = crypto.getRandomValues(new Uint8Array(4));
+    return Array.from(random, (value) => chars[value % chars.length]).join('');
   }
 
   private readOwnerDraft(): OwnerSignupDraft | null {

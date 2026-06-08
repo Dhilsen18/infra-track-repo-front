@@ -76,7 +76,17 @@
         <p class="plans-success-hint">{{ 'signup.companyCodeShareHint' | translate }}</p>
       </div>
 
-      <button type="button" class="plans-dashboard-cta" (click)="enterDashboard()">
+      @if (authError(); as err) {
+        <p class="plans-auth-error" role="alert">{{ err | translate }}</p>
+      }
+
+      <button
+        type="button"
+        class="plans-dashboard-cta"
+        [class.plans-dashboard-cta--loading]="iam.authBusy()"
+        (click)="enterDashboard()"
+        [disabled]="iam.authBusy()"
+      >
         @if (isProfileContext()) {
           {{ 'signup.backToDashboard' | translate }}
         } @else {

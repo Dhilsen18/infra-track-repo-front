@@ -92,7 +92,12 @@
           </div>
         </div>
 
-        <button class="auth-submit" type="submit">
+        <button
+          class="auth-submit"
+          [class.auth-submit--loading]="submitting()"
+          type="submit"
+          [disabled]="submitting()"
+        >
           {{ 'signup.continueToPlans' | translate }}
         </button>
       </form>
