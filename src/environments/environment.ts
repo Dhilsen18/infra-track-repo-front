@@ -9,6 +9,7 @@ import { INJECTED_API_BASE_URLS } from '../app/shared/infrastructure/api-bases.i
 export const environment = {
   production: true,
   appTitle: 'InfraTrack',
+  apiBaseUrl: INJECTED_API_BASE_URLS.identity,
   apiBases: INJECTED_API_BASE_URLS,
   iamSignInEndpointPath: '/authentication/sign-in',
   usersEndpointPath: '/users',
