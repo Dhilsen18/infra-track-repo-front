@@ -1,6 +1,6 @@
 /**
  * Se ejecuta antes de `ng build`. Si en Vercel/CI defines INFRATRACK_API_*,
- * se escriben en `api-bases.inject.ts`; si no, se mantienen los valores por defecto (MockAPI).
+ * se escriben en `api-bases.inject.ts`; si no, se usa el backend en Render.
  */
 import { writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -10,13 +10,15 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
 const outPath = join(root, 'src', 'app', 'shared', 'infrastructure', 'api-bases.inject.ts');
 
+const renderApiBase = 'https://infratrack-api.onrender.com/api/v1';
+
 const defaults = {
-  controlPanel: 'https://6a02a9550d92f63dd253e48d.mockapi.io/api/v1',
-  assetManagement: 'https://6a02a7340d92f63dd253e0e6.mockapi.io/api/v1',
-  telemetry: 'https://6a02a70a0d92f63dd253e074.mockapi.io/api/v1',
-  operations: 'https://6a02a56d0d92f63dd253dd53.mockapi.io/api/v1',
-  subscriptions: 'https://6a0246a80d92f63dd2537cd5.mockapi.io/api/v1',
-  identity: 'https://6a02a56d0d92f63dd253dd53.mockapi.io/api/v1',
+  controlPanel: renderApiBase,
+  assetManagement: renderApiBase,
+  telemetry: renderApiBase,
+  operations: renderApiBase,
+  subscriptions: renderApiBase,
+  identity: renderApiBase,
 };
 
 const envNames = {
@@ -29,6 +31,8 @@ const envNames = {
 };
 
 function pick(key) {
+  const globalBase = process.env.INFRATRACK_API_BASE_URL?.trim();
+  if (globalBase) return globalBase;
   const name = envNames[key];
   const raw = process.env[name];
   const trimmed = raw != null ? String(raw).trim() : '';

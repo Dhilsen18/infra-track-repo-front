@@ -1,18 +1,19 @@
 /**
- * Development environment — apunta al backend local (sin MockAPI).
- * Ajusta `apiBaseUrl` al puerto de tu API en el otro repositorio.
+ * Development environment — apunta al backend desplegado en Render.
  */
+const API_BASE = 'https://infratrack-api.onrender.com/api/v1';
+
 export const environment = {
   production: false,
   appTitle: 'InfraTrack',
-  apiBaseUrl: 'http://localhost:8080/api/v1',
+  apiBaseUrl: API_BASE,
   apiBases: {
-    controlPanel: 'http://localhost:8080/api/v1',
-    assetManagement: 'http://localhost:8080/api/v1',
-    telemetry: 'http://localhost:8080/api/v1',
-    operations: 'http://localhost:8080/api/v1',
-    subscriptions: 'http://localhost:8080/api/v1',
-    identity: 'http://localhost:8080/api/v1',
+    controlPanel: API_BASE,
+    assetManagement: API_BASE,
+    telemetry: API_BASE,
+    operations: API_BASE,
+    subscriptions: API_BASE,
+    identity: API_BASE,
   },
   iamSignInEndpointPath: '/authentication/sign-in',
   usersEndpointPath: '/users',
